@@ -1,0 +1,627 @@
+/* ── Nav active ─────────────────────────────────── */
+.nav__link--active {
+  background: rgba(93,170,128,.15);
+  color: var(--heading);
+}
+
+/* ── Shared button additions ────────────────────── */
+.btn--block { display: block; width: 100%; text-align: center; }
+
+.btn--outline {
+  background: transparent;
+  color: #E67E22;
+  border: 2px solid rgba(230,126,34,.5);
+}
+.btn--outline:hover {
+  background: rgba(230,126,34,.08);
+  border-color: #E67E22;
+  color: #E67E22;
+}
+
+/* ── Page hero ──────────────────────────────────── */
+.page-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 80% at 50% 60%, rgba(201,168,76,.12) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 70% at 78% 44%, rgba(42,82,64,.45) 0%, transparent 68%),
+    var(--cream);
+  padding: 100px 24px 80px;
+  text-align: center;
+}
+
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='80'%3E%3Cg fill='none' stroke='%235daa80' stroke-linecap='round'%3E%3Cpath d='M0,12 C40,1 120,23 160,12' stroke-width='0.9' opacity='0.08'/%3E%3Cpath d='M0,38 C40,31 120,45 160,38' stroke-width='0.7' opacity='0.05'/%3E%3Cpath d='M0,62 C40,52 120,72 160,62' stroke-width='0.9' opacity='0.08'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 160px 80px;
+}
+
+.page-hero__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.page-hero__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  line-height: 1.08;
+  color: var(--heading);
+}
+
+.page-hero__lead {
+  font-size: 1.05rem;
+  color: var(--muted);
+  max-width: 52ch;
+  line-height: 1.75;
+}
+
+/* ── Packages section ───────────────────────────── */
+.packages {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(30,80,210,.18) 0%, transparent 70%),
+    var(--cream);
+  padding: 80px 24px 100px;
+}
+
+.packages::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='80'%3E%3Cg fill='none' stroke='%235daa80' stroke-linecap='round'%3E%3Cpath d='M0,12 C40,1 120,23 160,12' stroke-width='0.9' opacity='0.08'/%3E%3Cpath d='M0,38 C40,31 120,45 160,38' stroke-width='0.7' opacity='0.05'/%3E%3Cpath d='M0,62 C40,52 120,72 160,62' stroke-width='0.9' opacity='0.08'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 160px 80px;
+}
+
+.packages__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+/* ── Package card ───────────────────────────────── */
+.pkg-card {
+  background: var(--surface);
+  border-radius: 24px;
+  padding: 36px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  border: 1px solid rgba(201,168,76,.12);
+  box-shadow: 0 8px 28px rgba(0,0,0,.35), 0 20px 50px rgba(0,0,0,.3);
+  position: relative;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.pkg-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 40px rgba(0,0,0,.45), 0 30px 70px rgba(0,0,0,.35);
+}
+
+.pkg-card--featured {
+  border-color: rgba(201,168,76,.35);
+  background: linear-gradient(160deg, #0f1d18 0%, #0a1410 100%);
+  transform: translateY(-12px);
+  box-shadow: 0 16px 48px rgba(0,0,0,.5), 0 32px 72px rgba(0,0,0,.4);
+}
+
+.pkg-card--featured:hover {
+  transform: translateY(-18px);
+}
+
+.pkg-card__ribbon {
+  position: absolute;
+  top: -1px;
+  right: 28px;
+  background: var(--gold);
+  color: #1a0e00;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 0 0 10px 10px;
+}
+
+.pkg-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.pkg-card__badge {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--green-dark);
+  border: 1px solid rgba(93,170,128,.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.1rem;
+  color: var(--green-light);
+  margin-top: 2px;
+}
+
+.pkg-card--featured .pkg-card__badge {
+  background: rgba(201,168,76,.15);
+  border-color: rgba(201,168,76,.35);
+  color: var(--gold);
+}
+
+.pkg-card__name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.5rem;
+  color: var(--heading);
+  line-height: 1;
+}
+
+.pkg-card__tagline {
+  font-size: .82rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.pkg-card__desc {
+  font-size: .9rem;
+  color: var(--muted);
+  line-height: 1.72;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+/* ── Feature list ───────────────────────────────── */
+.pkg-card__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+.pkg-card__list li {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-left: 18px;
+  position: relative;
+}
+
+.pkg-card__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green-light);
+  opacity: .6;
+}
+
+.pkg-card--featured .pkg-card__list li::before {
+  background: var(--gold);
+  opacity: .8;
+}
+
+.pkg-card__item-title {
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.pkg-card__item-desc {
+  font-size: .82rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* InBody anchor link in list */
+.pkg-anchor {
+  color: var(--gold);
+  text-decoration: underline;
+  text-decoration-color: rgba(201,168,76,.4);
+  text-underline-offset: 2px;
+  transition: color .2s;
+}
+.pkg-anchor:hover { color: var(--gold-light); text-decoration-color: var(--gold-light); }
+
+/* ── Card footer ────────────────────────────────── */
+.pkg-card__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+
+.pkg-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pkg-card__duration {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--green-light);
+}
+
+.pkg-card--featured .pkg-card__duration { color: var(--gold); }
+
+.pkg-card__price {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.8rem;
+  color: var(--heading);
+  display: block;
+  line-height: 1;
+}
+
+.pkg-card__price-note {
+  display: block;
+  font-size: .78rem;
+  color: var(--muted);
+  line-height: 1.55;
+  margin-top: 6px;
+}
+
+/* ── Button groups per card ─────────────────────── */
+.pkg-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pkg-btns--plno { display: none; }
+
+.pkg-card.plno .pkg-btns--normal { display: none; }
+.pkg-card.plno .pkg-btns--plno   { display: flex; }
+
+.plno-notice {
+  font-size: .82rem;
+  font-weight: 600;
+  color: #e07070;
+  text-align: center;
+  padding: 8px 12px;
+  background: rgba(200,80,80,.08);
+  border: 1px solid rgba(200,80,80,.2);
+  border-radius: 8px;
+}
+
+/* ── Food photo strip ───────────────────────────── */
+.food-strip {
+  display: flex;
+  height: 220px;
+  overflow: hidden;
+}
+
+.food-strip__item {
+  flex: 1;
+  background-color: #0a1410;
+  background-size: cover;
+  background-position: center;
+  transition: flex .4s ease;
+  filter: brightness(.75) saturate(.85);
+}
+
+.food-strip__item:hover {
+  flex: 2;
+  filter: brightness(.9) saturate(1);
+}
+
+.food-strip .fs--1 { background-image: url('jidlo.jpg'); }
+.food-strip .fs--2 { background-image: url("fotky pro záložku služby-20260510T210935Z-3-001/fotky pro záložku služby/P_20260327_143342.jpg"); }
+.food-strip .fs--3 { background-image: url('jidlo1.jpg'); }
+.food-strip .fs--4 { background-image: url("fotky pro záložku služby-20260510T210935Z-3-001/fotky pro záložku služby/P_20260327_200004.jpg"); }
+.food-strip .fs--5 { background-image: url("fotky pro záložku služby-20260510T210935Z-3-001/fotky pro záložku služby/P_20260327_195941.jpg"); }
+
+/* ── Info blocks ────────────────────────────────── */
+.info-blocks {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(30,80,210,.15) 0%, transparent 70%),
+    var(--surface);
+  padding: 80px 24px;
+}
+
+.info-blocks::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='80'%3E%3Cg fill='none' stroke='%235daa80' stroke-linecap='round'%3E%3Cpath d='M0,12 C40,1 120,23 160,12' stroke-width='0.9' opacity='0.08'/%3E%3Cpath d='M0,38 C40,31 120,45 160,38' stroke-width='0.7' opacity='0.05'/%3E%3Cpath d='M0,62 C40,52 120,72 160,62' stroke-width='0.9' opacity='0.08'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 160px 80px;
+}
+
+.info-blocks__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.info-card {
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(201,168,76,.12);
+  border-radius: 20px;
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.info-card__icon { font-size: 1.6rem; line-height: 1; }
+
+.info-card__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.2rem;
+  color: var(--heading);
+  line-height: 1.3;
+}
+
+.info-card__intro {
+  font-size: .9rem;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.info-card__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-card__list li {
+  font-size: .88rem;
+  color: var(--muted);
+  line-height: 1.65;
+  padding-left: 16px;
+  position: relative;
+}
+
+.info-card__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--green-light);
+  opacity: .5;
+}
+
+.info-card__list strong { color: var(--heading); font-weight: 600; }
+
+/* ── Waitlist section ───────────────────────────── */
+.waitlist {
+  display: none; /* JS přepíše na block pokud je alespoň 1 služba uzavřena */
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 50%, rgba(180,100,30,.14) 0%, transparent 70%),
+    var(--cream-dark);
+  padding: 80px 24px;
+}
+
+/* Waitlist je řízen přes JS (element.style.display) */
+
+.waitlist__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+}
+
+.waitlist__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  color: var(--heading);
+}
+
+.waitlist__lead {
+  font-size: .98rem;
+  color: var(--muted);
+  max-width: 48ch;
+  line-height: 1.75;
+}
+
+.waitlist__form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 8px;
+}
+
+.wl-row { display: grid; gap: 14px; }
+.wl-row--3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--heading);
+  text-align: left;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  padding: 11px 14px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: .9rem;
+  transition: border-color .2s, box-shadow .2s;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,.15);
+}
+
+.form-group input::placeholder { color: var(--muted); }
+
+.wl-services {
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+.wl-services legend {
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--heading);
+  padding: 0 6px;
+}
+
+.wl-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .88rem;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.wl-check input[type="checkbox"] { accent-color: var(--gold); width: 16px; height: 16px; }
+
+.gdpr-check {
+  display: flex;
+  gap: 10px;
+  text-align: left;
+  font-size: .82rem;
+  color: var(--muted);
+  line-height: 1.6;
+  cursor: pointer;
+}
+
+.gdpr-check input[type="checkbox"] { flex-shrink: 0; accent-color: var(--gold); width: 16px; height: 16px; margin-top: 2px; }
+.gdpr-link { color: var(--gold); }
+
+.wl-success {
+  font-size: .92rem;
+  color: var(--green-light);
+  font-weight: 500;
+  text-align: center;
+}
+
+/* ── Closed / plno card state ───────────────────── */
+.pkg-card { overflow: hidden; }
+
+.pkg-card.plno {
+  border-color: rgba(210,50,50,.55);
+  box-shadow:
+    0 8px 28px rgba(0,0,0,.4),
+    0 20px 50px rgba(0,0,0,.35),
+    0 0 0 1px rgba(210,50,50,.25),
+    0 0 24px rgba(210,50,50,.12);
+  animation: plnoPulse 3s ease-in-out infinite;
+}
+
+/* Červený banner přes celou šířku karty */
+.pkg-card.plno::before {
+  content: '⛔  KAPACITA PLNÁ  ⛔';
+  display: block;
+  width: calc(100% + 64px);
+  margin: -36px -32px 20px;
+  padding: 10px 0;
+  text-align: center;
+  background: linear-gradient(90deg, #990000, #cc1111, #990000);
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .22em;
+  text-shadow: 0 1px 4px rgba(0,0,0,.5);
+}
+
+/* Schovat ribbon – překrývá se s bannerem */
+.pkg-card.plno .pkg-card__ribbon { display: none; }
+
+/* Mírné zšednění obsahu karty */
+.pkg-card.plno .pkg-card__name,
+.pkg-card.plno .pkg-card__tagline,
+.pkg-card.plno .pkg-card__desc,
+.pkg-card.plno .pkg-card__list,
+.pkg-card.plno .pkg-card__meta {
+  opacity: .45;
+}
+
+@keyframes plnoPulse {
+  0%, 100% { box-shadow: 0 8px 28px rgba(0,0,0,.4), 0 0 16px rgba(210,50,50,.08); }
+  50%       { box-shadow: 0 8px 28px rgba(0,0,0,.4), 0 0 32px rgba(220,50,50,.28); }
+}
+
+/* ── Responsive ─────────────────────────────────── */
+@media (max-width: 960px) {
+  .packages__inner {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+  }
+  .pkg-card--featured { transform: none; }
+  .pkg-card--featured:hover { transform: translateY(-6px); }
+
+  .info-blocks__inner { grid-template-columns: 1fr; max-width: 520px; }
+
+  .food-strip { height: 160px; }
+
+  .wl-row--3 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .page-hero { padding: 72px 20px 56px; }
+  .pkg-card { padding: 28px 20px 24px; }
+  .info-card { padding: 28px 20px; }
+  .food-strip { height: 120px; }
+  .wl-services { flex-direction: column; gap: 12px; }
+}

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Služby & ceník – Kryštof Koblas Nutriční poradenství</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="sluzby.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo">
+        <img src="logotxt.png" alt="KKoblas logo">
+      </a>
+      <button class="header__toggle" aria-expanded="false" aria-label="Menu">
+        <span class="hamburger"></span>
+      </button>
+      <nav class="header__nav" aria-label="Hlavní navigace">
+        <ul class="nav__list">
+          <li><a class="nav__link" href="index.html#home">Home</a></li>
+          <li><a class="nav__link" href="index.html#about">O mně</a></li>
+          <li><a class="nav__link nav__link--active" href="sluzby.html">Služby</a></li>
+          <li><a class="nav__link" href="kontakt.html">Kontakt</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ── Page hero ────────────────────────────── -->
+    <section class="page-hero">
+      <div class="page-hero__inner">
+        <span class="eyebrow">Co nabízím</span>
+        <h1 class="page-hero__title">Služby & ceník</h1>
+        <p class="page-hero__lead">Vyber si balíček, který sedí tvým cílům. Každý klient dostane individuální přístup – žádné šablony.</p>
+      </div>
+    </section>
+
+    <!-- ── Packages ──────────────────────────────── -->
+    <section class="packages" id="packages">
+      <div class="packages__inner">
+
+        <!-- 1. START-UP -->
+        <article class="pkg-card" data-sluzba="startup">
+          <div class="pkg-card__head">
+            <span class="pkg-card__badge">1</span>
+            <div>
+              <h2 class="pkg-card__name">START-UP</h2>
+              <p class="pkg-card__tagline">Profi odrazový můstek</p>
+            </div>
+          </div>
+          <p class="pkg-card__desc">Ideální pro ty, kteří potřebují systém a vědu bez dlouhých závazků. Žádné hádání, jen jasná data.</p>
+
+          <ul class="pkg-card__list">
+            <li>
+              <span class="pkg-card__item-title">1× online konzultace (45–60 min)</span>
+              <span class="pkg-card__item-desc">Vstupní analýza, kde probereme tvoje návyky a nastavíme směr.</span>
+            </li>
+            <li>
+              <span class="pkg-card__item-title">Individuální plán v systému ZOF</span>
+              <span class="pkg-card__item-desc">Vytvoříš si bezplatný účet a já se s tebou propojím přes svou licenci. Neplatíš žádné poplatky za platformu.</span>
+            </li>
+            <li>
+              <span class="pkg-card__item-title">Suplementace s rozumem</span>
+              <span class="pkg-card__item-desc">Pouze to, co tvoje tělo skutečně potřebuje (metodika ATAC).</span>
+            </li>
+            <li>
+              <span class="pkg-card__item-title">Diagnostika <a href="#inbody" class="pkg-anchor">InBody</a> (2×)</span>
+              <span class="pkg-card__item-desc">Úvodní a výstupní měření pro ověření výsledků.</span>
+            </li>
+          </ul>
+
+          <div class="pkg-card__footer">
+            <div class="pkg-card__meta">
+              <span class="pkg-card__duration">1 měsíc</span>
+              <div class="pkg-card__pricing">
+                <span class="pkg-card__price">6 900 Kč</span>
+                <span class="pkg-card__price-note">V první faktuře automaticky odečítám 800 Kč paušální slevu na InBody měření.</span>
+              </div>
+            </div>
+            <div class="pkg-btns pkg-btns--normal">
+              <a href="objednavka.html?sluzba=startup" class="btn btn--primary btn--block">Objednat za 6 900 Kč</a>
+            </div>
+            <div class="pkg-btns pkg-btns--plno">
+              <p class="plno-notice">Kapacita je momentálně plná.</p>
+              <a href="#waitlist" class="btn btn--outline btn--block">Chci vědět o volném místě</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2. MENTORING -->
+        <article class="pkg-card pkg-card--featured" data-sluzba="mentoring">
+          <div class="pkg-card__ribbon">Nejoblíbenější</div>
+          <div class="pkg-card__head">
+            <span class="pkg-card__badge">2</span>
+            <div>
+              <h2 class="pkg-card__name">MENTORING</h2>
+              <p class="pkg-card__tagline">Individuální vedení</p>
+            </div>
+          </div>
+          <p class="pkg-card__desc">Můj nejoblíbenější balíček pro ty, kteří chtějí trvalou změnu pod dohledem parťáka.</p>
+
+          <ul class="pkg-card__list">
+            <li>
+              <span class="pkg-card__item-title">Celkem 4 online schůzky</span>
+              <span class="pkg-card__item-desc">Každý měsíc jeden 45minutový videohovor (1× vstupní + 3× mentoring).</span>
+            </li>
+            <li>
+              <span class="pkg-card__item-title">Metodika a zázemí</span>
+              <span class="pkg-card__item-desc">Kompletní nastavení plánu v ZOF a suplementace ATAC jako u balíčku Start-up.</span>
+            </li>
+            <li>
+              <span class="pkg-card__item-title">Průběžná diagnostika (3× <a href="#inbody" class="pkg-anchor">InBody</a>)</span>
+              <span class="pkg-card__item-desc">Pravidelná kontrola tvého progresu.</span>
+            </li>
+            <li>
+              <span class="pkg-card__item-title">Podpora na WhatsAppu</span>
+              <span class="pkg-card__item-desc">VIP odpověď garantuji do 24 hodin.</span>
+            </li>
+          </ul>
+
+          <div class="pkg-card__footer">
+            <div class="pkg-card__meta">
+              <span class="pkg-card__duration">4 měsíce</span>
+              <div class="pkg-card__pricing">
+                <span class="pkg-card__price">15 900 Kč</span>
+                <span class="pkg-card__price-note">Nebo splátky: 7 500 Kč (v 1. měs. po slevě jen 6 200 Kč) + 3× 2 800 Kč.</span>
+              </div>
+            </div>
+            <div class="pkg-btns pkg-btns--normal">
+              <a href="objednavka.html?sluzba=mentoring&platba=jednorizove" class="btn btn--primary btn--block">Koupit jednorázově za 15 900 Kč</a>
+              <a href="objednavka.html?sluzba=mentoring&platba=splatky" class="btn btn--outline btn--block">Chci na splátky – 1. platba 7 500 Kč</a>
+            </div>
+            <div class="pkg-btns pkg-btns--plno">
+              <p class="plno-notice">Kapacita je momentálně plná.</p>
+              <a href="#waitlist" class="btn btn--outline btn--block">Chci vědět o volném místě</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3. ULTIMATE -->
+        <article class="pkg-card" data-sluzba="ultimate">
+          <div class="pkg-card__head">
+            <span class="pkg-card__badge">3</span>
+            <div>
+              <h2 class="pkg-card__name">ULTIMATE</h2>
+              <p class="pkg-card__tagline">Maximální výkon a biohacking</p>
+            </div>
+          </div>
+          <p class="pkg-card__desc">Prémiová péče pro optimalizaci těla na buněčné úrovni včetně spánku a regenerace.</p>
+
+          <ul class="pkg-card__list">
+            <li>
+              <span class="pkg-card__item-title">Celkem 6 online schůzek</span>
+              <span class="pkg-card__item-desc">Intenzivní vedení, scházíme se každý měsíc (1× vstupní + 5× mentoring).</span>
+            </li>
+            <li>
+              <span class="pkg-card__item-title">Kompletní servis</span>
+              <span class="pkg-card__item-desc">Zahrnuje všechnu technickou podporu, licenci ZOF a WhatsApp asistenci.</span>
+            </li>
+            <li>
+              <span class="pkg-card__item-title">Pokročilé protokoly</span>
+              <span class="pkg-card__item-desc">Cirkadiánní rytmus a mentální výkon.</span>
+            </li>
+            <li>
+              <span class="pkg-card__item-title">Diagnostika <a href="#inbody" class="pkg-anchor">InBody</a> (4×)</span>
+              <span class="pkg-card__item-desc">Maximální kontrola tvé proměny v čase.</span>
+            </li>
+            <li>
+              <span class="pkg-card__item-title">VIP podpora</span>
+              <span class="pkg-card__item-desc">Přednostní právo, garance odpovědi na WhatsAppu do 12 hodin.</span>
+            </li>
+          </ul>
+
+          <div class="pkg-card__footer">
+            <div class="pkg-card__meta">
+              <span class="pkg-card__duration">6 měsíců</span>
+              <div class="pkg-card__pricing">
+                <span class="pkg-card__price">23 900 Kč</span>
+                <span class="pkg-card__price-note">Nebo splátky: 11 900 Kč (po slevě na InBody jen 10 300 Kč) + 5× 2 400 Kč.</span>
+              </div>
+            </div>
+            <div class="pkg-btns pkg-btns--normal">
+              <a href="objednavka.html?sluzba=ultimate&platba=jednorizove" class="btn btn--primary btn--block">Koupit jednorázově za 23 900 Kč</a>
+              <a href="objednavka.html?sluzba=ultimate&platba=splatky" class="btn btn--outline btn--block">Chci na splátky – 1. platba 11 900 Kč</a>
+            </div>
+            <div class="pkg-btns pkg-btns--plno">
+              <p class="plno-notice">Kapacita je momentálně plná.</p>
+              <a href="#waitlist" class="btn btn--outline btn--block">Chci vědět o volném místě</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ── Food photo strip ───────────────────────── -->
+    <div class="food-strip" aria-hidden="true">
+      <div class="food-strip__item fs--1"></div>
+      <div class="food-strip__item fs--2"></div>
+      <div class="food-strip__item fs--3"></div>
+      <div class="food-strip__item fs--4"></div>
+      <div class="food-strip__item fs--5"></div>
+    </div>
+
+    <!-- ── Info blocks ────────────────────────────── -->
+    <section class="info-blocks">
+      <div class="info-blocks__inner">
+
+        <div class="info-card" id="inbody">
+          <div class="info-card__icon">📍</div>
+          <h3 class="info-card__title">Jak vyřešit InBody – jednoduše a levně</h3>
+          <p class="info-card__intro">Diagnostiku si zajistíš sám, abychom neztráceli čas cestováním.</p>
+          <ul class="info-card__list">
+            <li><strong>Kde se změřit:</strong> InBody najdeš v každém větším fitku, posilovně nebo lékárně.</li>
+            <li><strong>Chtěj jen „čísla":</strong> Žádej pouze samotné měření bez interpretace. Rozbor spolu uděláme v klidu na naší schůzce.</li>
+            <li><strong>Sleva v ceně:</strong> Na každé měření ti dávám paušální slevu 400 Kč. Částku odečítám rovnou z první faktury. Peníze na měření ti zůstávají v kapse.</li>
+            <li><strong>Měj to ready:</strong> První měření měj hotové ideálně už před naší úvodní online schůzkou.</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card__icon">💳</div>
+          <h3 class="info-card__title">Jak fungují splátky a fakturace?</h3>
+          <p class="info-card__intro">U dlouhodobých programů nabízím rozložení platby bez navýšení.</p>
+          <ul class="info-card__list">
+            <li><strong>Automatizace:</strong> Nová faktura ti dorazí vždy v den splatnosti na e-mail.</li>
+            <li><strong>Plynulost:</strong> První splátka hradí úvodní analýzu a nastavení systému. Prosím o včasné platby, aby tvůj přístup do systémů běžel bez přerušení.</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Waitlist (visible only in plno mode) ──── -->
+    <section class="waitlist" id="waitlist">
+      <div class="waitlist__inner">
+        <span class="eyebrow">Brzy budu nabírat</span>
+        <h2 class="waitlist__title">Nech mi na sebe kontakt</h2>
+        <p class="waitlist__lead">Kapacita je momentálně plná. Jakmile se uvolní místo, budeš mezi prvními, kdo se dozví.</p>
+
+        <form class="waitlist__form" id="waitlistForm" novalidate>
+          <div class="wl-row wl-row--3">
+            <div class="form-group">
+              <label for="wl-name">Jméno a příjmení <span class="req">*</span></label>
+              <input type="text" id="wl-name" name="Jméno" required placeholder="Jan Novák">
+            </div>
+            <div class="form-group">
+              <label for="wl-email">E-mail <span class="req">*</span></label>
+              <input type="email" id="wl-email" name="E-mail" required placeholder="jan@email.cz">
+            </div>
+            <div class="form-group">
+              <label for="wl-phone">Telefon</label>
+              <input type="tel" id="wl-phone" name="Telefon" placeholder="+420 777 000 000">
+            </div>
+          </div>
+
+          <fieldset class="wl-services">
+            <legend>Mám zájem o</legend>
+            <label class="wl-check"><input type="checkbox" name="Zájem o" value="START-UP"> START-UP</label>
+            <label class="wl-check"><input type="checkbox" name="Zájem o" value="MENTORING"> MENTORING</label>
+            <label class="wl-check"><input type="checkbox" name="Zájem o" value="ULTIMATE"> ULTIMATE</label>
+          </fieldset>
+
+          <label class="gdpr-check">
+            <input type="checkbox" name="GDPR souhlas" required>
+            <span>Souhlasím se zpracováním osobních údajů za účelem informování o volné kapacitě. <a href="#" class="gdpr-link">Zásady ochrany soukromí.</a></span>
+          </label>
+
+          <button type="submit" class="btn btn--primary">Chci vědět o volném místě</button>
+          <p class="wl-success" hidden>Perfektní! Ozvu se, jakmile budu nabírat nové klienty.</p>
+        </form>
+      </div>
+    </section>
+
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer__inner">
+      <span>© 2026 Kryštof Koblas – Nutriční poradenství</span>
+    </div>
+  </footer>
+
+
+  <script src="script.js"></script>
+  <script src="sluzby.js"></script>
+</body>
+</html>

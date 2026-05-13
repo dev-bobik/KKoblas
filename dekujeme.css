@@ -1,0 +1,171 @@
+/* ── Thank you page ─────────────────────────────── */
+.thankyou {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 40%, rgba(30,80,210,.18) 0%, transparent 65%),
+    var(--cream);
+  min-height: calc(100vh - 90px);
+  padding: 80px 24px 100px;
+}
+
+.thankyou::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='80'%3E%3Cg fill='none' stroke='%235daa80' stroke-linecap='round'%3E%3Cpath d='M0,12 C40,1 120,23 160,12' stroke-width='0.9' opacity='0.08'/%3E%3Cpath d='M0,38 C40,31 120,45 160,38' stroke-width='0.7' opacity='0.05'/%3E%3Cpath d='M0,62 C40,52 120,72 160,62' stroke-width='0.9' opacity='0.08'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 160px 80px;
+}
+
+.thankyou__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+}
+
+/* ── Check icon ─────────────────────────────────── */
+.thankyou__icon {
+  width: 80px;
+  height: 80px;
+  color: var(--green-light);
+}
+
+.thankyou__icon svg { width: 100%; height: 100%; }
+
+/* ── Title ──────────────────────────────────────── */
+.thankyou__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  line-height: 1.1;
+  color: var(--heading);
+}
+
+.thankyou__service {
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: .06em;
+  background: rgba(201,168,76,.08);
+  border: 1px solid rgba(201,168,76,.2);
+  border-radius: 8px;
+  padding: 6px 16px;
+}
+
+.thankyou__lead {
+  font-size: 1rem;
+  color: var(--muted);
+  max-width: 50ch;
+  line-height: 1.75;
+}
+
+/* ── Steps ──────────────────────────────────────── */
+.steps {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 8px 0;
+}
+
+.step {
+  display: flex;
+  gap: 20px;
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 18px;
+  padding: 24px 24px;
+  text-align: left;
+  align-items: flex-start;
+}
+
+.step__num {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(93,170,128,.12);
+  border: 1px solid rgba(93,170,128,.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1rem;
+  color: var(--green-light);
+  margin-top: 2px;
+}
+
+.step__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.step__title {
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--heading);
+  display: block;
+}
+
+.step__desc {
+  font-size: .86rem;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.step__btn {
+  margin-top: 4px;
+  padding: 10px 22px;
+  font-size: .86rem;
+  align-self: flex-start;
+}
+
+/* ── Contact links ──────────────────────────────── */
+.thankyou__contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.thankyou__contact p {
+  font-size: .88rem;
+  color: var(--muted);
+}
+
+.ty-links {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ty-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-size: .9rem;
+  font-weight: 500;
+  padding: 9px 20px;
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,.1);
+  transition: color .2s, border-color .2s, background .2s;
+}
+.ty-link:hover { color: var(--gold-light); border-color: rgba(201,168,76,.35); background: rgba(201,168,76,.05); }
+.ty-link svg { width: 17px; height: 17px; opacity: .6; flex-shrink: 0; }
+
+/* ── Responsive ─────────────────────────────────── */
+@media (max-width: 500px) {
+  .step { flex-direction: column; gap: 12px; }
+  .thankyou { padding: 60px 16px 80px; }
+}

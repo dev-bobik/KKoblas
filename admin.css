@@ -1,0 +1,517 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #080808;
+  --panel:    #111111;
+  --border:   #2a2a2a;
+  --amber:    #ffb300;
+  --amber-dim:#7a5400;
+  --red:      #ff2222;
+  --red-dim:  #5a0000;
+  --green:    #00ff66;
+  --green-dim:#004422;
+  --text:     #cccccc;
+  --sub:      #555555;
+  --font-mono: 'Courier New', Courier, monospace;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── Lock screen ────────────────────────────────── */
+.lock-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lock-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 48px 44px;
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--amber);
+  background: var(--panel);
+  width: min(400px, 90vw);
+}
+
+.lock-logo {
+  font-size: 2.4rem;
+  color: var(--amber);
+  animation: pulseAmber 2s ease infinite;
+}
+
+.lock-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  letter-spacing: .2em;
+  color: var(--amber);
+}
+
+.lock-sub {
+  font-size: .72rem;
+  color: var(--sub);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  margin-top: -8px;
+}
+
+.lock-input {
+  width: 100%;
+  background: #000;
+  border: 1px solid var(--border);
+  border-bottom: 2px solid var(--amber-dim);
+  color: var(--amber);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  padding: 12px 16px;
+  letter-spacing: .2em;
+  text-align: center;
+  outline: none;
+  transition: border-color .2s;
+  margin-top: 8px;
+}
+
+.lock-input:focus { border-bottom-color: var(--amber); }
+.lock-input::placeholder { color: var(--amber-dim); letter-spacing: .1em; }
+
+.lock-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  font-family: var(--font-mono);
+  font-size: .88rem;
+  font-weight: bold;
+  letter-spacing: .2em;
+  padding: 12px;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+.lock-btn:hover { background: var(--amber); color: #000; }
+
+.lock-error {
+  font-size: .78rem;
+  color: var(--red);
+  letter-spacing: .1em;
+  text-align: center;
+  animation: shake .3s ease;
+}
+
+/* ── Console ─────────────────────────────────────── */
+.console {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Scan-lines overlay */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0,0,0,.15) 2px,
+    rgba(0,0,0,.15) 4px
+  );
+}
+
+/* ── Header ─────────────────────────────────────── */
+.console-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.console-brand {
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: .25em;
+  color: var(--amber);
+}
+.console-sub {
+  display: block;
+  font-size: .6rem;
+  color: var(--sub);
+  letter-spacing: .2em;
+  margin-top: 2px;
+}
+
+.console-header__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sys-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulseGreen 2s ease infinite;
+}
+
+.sys-label {
+  font-size: .68rem;
+  color: var(--green);
+  letter-spacing: .18em;
+}
+
+/* ── Station grid ───────────────────────────────── */
+.console-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 40px 32px;
+  flex: 1;
+}
+
+/* ── Station card ───────────────────────────────── */
+.station {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border);
+  border-radius: 4px;
+  padding: 28px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: border-top-color .4s;
+}
+
+/* Warning stripe top border when open */
+.station.volny {
+  border-top: 4px solid transparent;
+  border-image: repeating-linear-gradient(
+    90deg,
+    #ffb300 0px, #ffb300 14px,
+    #000 14px, #000 28px
+  ) 1;
+}
+
+/* Red glow when closed */
+.station.uzavreny {
+  border-top: 4px solid var(--red);
+  box-shadow: 0 0 30px rgba(255,0,0,.08), inset 0 0 40px rgba(255,0,0,.03);
+}
+
+.station-label {
+  font-size: .9rem;
+  font-weight: bold;
+  letter-spacing: .25em;
+  color: var(--amber);
+  text-align: center;
+}
+
+.station-duration {
+  font-size: .62rem;
+  color: var(--sub);
+  letter-spacing: .1em;
+  margin-top: -14px;
+}
+
+/* ── Status display ─────────────────────────────── */
+.status-display {
+  width: 100%;
+  background: #000;
+  border: 1px solid #1a1a1a;
+  border-radius: 3px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-width: 160px;
+}
+
+.status-led {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background .4s, box-shadow .4s;
+}
+
+.station.volny .status-led {
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green), 0 0 20px rgba(0,255,100,.4);
+}
+.station.uzavreny .status-led {
+  background: var(--red);
+  box-shadow: 0 0 8px var(--red), 0 0 20px rgba(255,0,0,.5);
+  animation: blinkLed 1.4s ease infinite;
+}
+
+.status-text {
+  font-size: 1.1rem;
+  font-weight: bold;
+  letter-spacing: .2em;
+  transition: color .4s;
+}
+
+.station.volny .status-text {
+  color: var(--green);
+  text-shadow: 0 0 10px rgba(0,255,100,.5);
+}
+.station.uzavreny .status-text {
+  color: var(--red);
+  text-shadow: 0 0 10px rgba(255,0,0,.6);
+  animation: blinkText 1.4s ease infinite;
+}
+
+/* ── Button mount ───────────────────────────────── */
+.btn-mount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: repeating-linear-gradient(
+    45deg,
+    #0d0d0d 0px, #0d0d0d 6px,
+    #000 6px, #000 12px
+  );
+  border-radius: 4px;
+  border: 1px solid #1a1a1a;
+  width: 100%;
+}
+
+.btn-ring {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #1a1a1a, #0d0d0d);
+  border: 3px solid #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 4px 12px rgba(0,0,0,.8);
+}
+
+/* ── The Big Button ─────────────────────────────── */
+.launch-btn {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .15s ease, box-shadow .3s ease;
+  outline: none;
+
+  /* Default = red (service is open, action = close) */
+  background: radial-gradient(circle at 38% 32%, #ff6666, #cc0000, #6a0000);
+  box-shadow:
+    0 0 0 6px #1a0000,
+    0 6px 18px rgba(200,0,0,.6),
+    0 0 40px rgba(255,0,0,.25),
+    inset 0 3px 8px rgba(255,180,180,.2),
+    inset 0 -3px 6px rgba(0,0,0,.5);
+}
+
+/* Specular highlight */
+.launch-btn::before {
+  content: '';
+  position: absolute;
+  top: 18%;
+  left: 20%;
+  width: 36%;
+  height: 24%;
+  background: radial-gradient(ellipse, rgba(255,255,255,.35), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: rotate(-20deg);
+}
+
+.launch-btn:hover {
+  box-shadow:
+    0 0 0 6px #1a0000,
+    0 10px 28px rgba(255,0,0,.8),
+    0 0 60px rgba(255,0,0,.4),
+    inset 0 3px 8px rgba(255,180,180,.2),
+    inset 0 -3px 6px rgba(0,0,0,.5);
+}
+
+.launch-btn:active {
+  transform: scale(0.93) translateY(3px);
+  box-shadow:
+    0 0 0 6px #1a0000,
+    0 3px 8px rgba(200,0,0,.4),
+    0 0 20px rgba(255,0,0,.15),
+    inset 0 5px 12px rgba(0,0,0,.6),
+    inset 0 -1px 3px rgba(255,180,180,.1);
+}
+
+/* When service is uzavřený → button goes green (action = open) */
+.station.uzavreny .launch-btn {
+  background: radial-gradient(circle at 38% 32%, #66ff99, #00cc55, #005522);
+  box-shadow:
+    0 0 0 6px #001a00,
+    0 6px 18px rgba(0,180,80,.6),
+    0 0 40px rgba(0,255,100,.25),
+    inset 0 3px 8px rgba(180,255,200,.2),
+    inset 0 -3px 6px rgba(0,0,0,.5);
+}
+.station.uzavreny .launch-btn:hover {
+  box-shadow:
+    0 0 0 6px #001a00,
+    0 10px 28px rgba(0,220,100,.8),
+    0 0 60px rgba(0,255,100,.4),
+    inset 0 3px 8px rgba(180,255,200,.2),
+    inset 0 -3px 6px rgba(0,0,0,.5);
+}
+.station.uzavreny .launch-btn:active {
+  box-shadow:
+    0 0 0 6px #001a00,
+    0 3px 8px rgba(0,180,80,.4),
+    0 0 20px rgba(0,255,100,.15),
+    inset 0 5px 12px rgba(0,0,0,.6),
+    inset 0 -1px 3px rgba(180,255,200,.1);
+}
+
+.launch-btn__label {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  font-weight: bold;
+  letter-spacing: .18em;
+  color: rgba(255,255,255,.85);
+  text-shadow: 0 1px 3px rgba(0,0,0,.8);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Master controls ────────────────────────────── */
+.master-controls {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 32px 40px;
+}
+
+.master-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--sub);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  letter-spacing: .2em;
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: all .2s;
+  text-transform: uppercase;
+}
+
+.master-btn--close {
+  border-color: rgba(255,34,34,.3);
+}
+.master-btn--close:hover {
+  border-color: var(--red);
+  color: var(--red);
+  background: rgba(255,0,0,.05);
+  box-shadow: 0 0 16px rgba(255,0,0,.15);
+}
+
+.master-btn--open {
+  border-color: rgba(0,255,100,.2);
+}
+.master-btn--open:hover {
+  border-color: var(--green);
+  color: var(--green);
+  background: rgba(0,255,100,.05);
+  box-shadow: 0 0 16px rgba(0,255,100,.1);
+}
+
+/* ── Footer ─────────────────────────────────────── */
+.console-footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  border-top: 1px solid var(--border);
+  background: var(--panel);
+  font-size: .66rem;
+  color: var(--sub);
+  letter-spacing: .1em;
+}
+
+.footer-link {
+  color: var(--amber-dim);
+  text-decoration: none;
+  letter-spacing: .12em;
+  transition: color .2s;
+}
+.footer-link:hover { color: var(--amber); }
+
+/* ── Animations ─────────────────────────────────── */
+@keyframes pulseAmber {
+  0%, 100% { text-shadow: 0 0 8px rgba(255,179,0,.4); }
+  50%       { text-shadow: 0 0 24px rgba(255,179,0,.9); }
+}
+
+@keyframes pulseGreen {
+  0%, 100% { box-shadow: 0 0 6px var(--green); }
+  50%       { box-shadow: 0 0 16px var(--green), 0 0 30px rgba(0,255,100,.3); }
+}
+
+@keyframes blinkLed {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+@keyframes blinkText {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+
+/* ── Responsive ─────────────────────────────────── */
+@media (max-width: 900px) {
+  .console-grid { grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 16px; }
+}
+@media (max-width: 600px) {
+  .console-grid { grid-template-columns: 1fr; }
+  .console-header { padding: 12px 16px; }
+  .master-controls { flex-direction: column; align-items: center; padding: 0 16px 32px; }
+  .master-btn { width: 100%; max-width: 320px; text-align: center; }
+}

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Objednávka – Kryštof Koblas Nutriční poradenství</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="objednavka.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo">
+        <img src="logotxt.png" alt="KKoblas logo">
+      </a>
+      <button class="header__toggle" aria-expanded="false" aria-label="Menu">
+        <span class="hamburger"></span>
+      </button>
+      <nav class="header__nav" aria-label="Hlavní navigace">
+        <ul class="nav__list">
+          <li><a class="nav__link" href="index.html#home">Home</a></li>
+          <li><a class="nav__link" href="index.html#about">O mně</a></li>
+          <li><a class="nav__link" href="sluzby.html">Služby</a></li>
+          <li><a class="nav__link" href="kontakt.html">Kontakt</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="order-page">
+      <div class="order-page__inner">
+
+        <div class="order-page__header">
+          <a href="sluzby.html" class="back-link">← Zpět na služby</a>
+          <span class="eyebrow">Objednávka</span>
+          <h1 class="order-page__title">Pojďme to rozjet</h1>
+        </div>
+
+        <!-- Shrnutí objednávky -->
+        <div class="order-summary">
+          <div class="order-summary__row">
+            <span class="order-summary__label">Služba</span>
+            <strong class="order-summary__val" id="orderServiceName">—</strong>
+          </div>
+          <div class="order-summary__divider"></div>
+          <div class="order-summary__row">
+            <span class="order-summary__label">Způsob platby</span>
+            <strong class="order-summary__val" id="orderPlatba">—</strong>
+          </div>
+          <div class="order-summary__divider"></div>
+          <div class="order-summary__row order-summary__row--price">
+            <span class="order-summary__label">K úhradě</span>
+            <strong class="order-summary__price" id="orderPrice">—</strong>
+          </div>
+        </div>
+
+        <form id="orderForm" novalidate>
+          <!-- Skrytá pole pro Formspree -->
+          <input type="hidden" name="_subject" id="emailSubject" value="Nová objednávka">
+          <input type="hidden" name="Služba" id="hiddenSluzba">
+          <input type="hidden" name="Způsob platby" id="hiddenPlatba">
+          <input type="hidden" name="K úhradě" id="hiddenPrice">
+
+          <!-- ── I. Kontaktní údaje ─────────────────── -->
+          <div class="form-section">
+            <h2 class="form-section__title">
+              <span class="form-section__num">I</span>
+              Kontaktní a fakturační údaje
+            </h2>
+            <p class="form-section__note">Nutné pro vystavení faktury a GDPR evidenci.</p>
+
+            <div class="form-grid form-grid--2">
+              <div class="form-group">
+                <label for="fname">Jméno a příjmení <span class="req">*</span></label>
+                <input type="text" id="fname" name="Jméno a příjmení" required placeholder="Jan Novák" autocomplete="name">
+              </div>
+              <div class="form-group">
+                <label for="femail">E-mail <span class="req">*</span></label>
+                <input type="email" id="femail" name="E-mail" required placeholder="jan@email.cz" autocomplete="email">
+              </div>
+              <div class="form-group">
+                <label for="fphone">Telefonní číslo <span class="req">*</span></label>
+                <input type="tel" id="fphone" name="Telefon" required placeholder="+420 777 000 000" autocomplete="tel">
+                <span class="form-hint">Nutné pro WhatsApp / rychlou domluvu.</span>
+              </div>
+              <div class="form-group">
+                <label for="fstreet">Ulice a č. p. <span class="req">*</span></label>
+                <input type="text" id="fstreet" name="Ulice a č. p." required placeholder="Hlavní 123" autocomplete="street-address">
+              </div>
+              <div class="form-group">
+                <label for="fcity">Město <span class="req">*</span></label>
+                <input type="text" id="fcity" name="Město" required placeholder="Praha" autocomplete="address-level2">
+              </div>
+              <div class="form-group">
+                <label for="fzip">PSČ <span class="req">*</span></label>
+                <input type="text" id="fzip" name="PSČ" required placeholder="110 00" autocomplete="postal-code">
+              </div>
+              <div class="form-group">
+                <label for="fcountry">Země <span class="req">*</span></label>
+                <select id="fcountry" name="Země" required autocomplete="country-name">
+                  <option value="">Vyberte zemi</option>
+                  <option value="Česká republika" selected>Česká republika</option>
+                  <option value="Slovensko">Slovensko</option>
+                  <option value="Jiná">Jiná</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="fico">IČO / DIČ <span class="form-hint-inline">(pro firmy)</span></label>
+                <input type="text" id="fico" name="IČO / DIČ" placeholder="12345678">
+              </div>
+            </div>
+          </div>
+
+          <!-- ── II. Údaje pro analýzu ──────────────── -->
+          <div class="form-section">
+            <h2 class="form-section__title">
+              <span class="form-section__num">II</span>
+              Údaje pro analýzu
+            </h2>
+            <p class="form-section__note">Slouží k sestavení individuálního plánu.</p>
+
+            <div class="form-grid form-grid--3">
+              <div class="form-group">
+                <label for="fage">Věk <span class="req">*</span></label>
+                <input type="number" id="fage" name="Věk" required min="16" max="99" placeholder="28">
+              </div>
+              <div class="form-group">
+                <label for="fgender">Pohlaví <span class="req">*</span></label>
+                <select id="fgender" name="Pohlaví" required>
+                  <option value="">Vyberte</option>
+                  <option value="Muž">Muž</option>
+                  <option value="Žena">Žena</option>
+                  <option value="Jiné">Jiné</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="fheight">Výška (cm) <span class="req">*</span></label>
+                <input type="number" id="fheight" name="Výška (cm)" required min="140" max="220" placeholder="175">
+              </div>
+              <div class="form-group">
+                <label for="fweight">Váha (kg) <span class="req">*</span></label>
+                <input type="number" id="fweight" name="Váha (kg)" required min="40" max="250" placeholder="80">
+              </div>
+              <div class="form-group">
+                <label for="fhips">Obvod boků (cm) <span class="form-hint-inline">(vhodné)</span></label>
+                <input type="number" id="fhips" name="Obvod boků (cm)" min="60" max="180" placeholder="95">
+              </div>
+              <div class="form-group">
+                <label for="fwaist">Obvod pasu (cm) <span class="form-hint-inline">(vhodné)</span></label>
+                <input type="number" id="fwaist" name="Obvod pasu (cm)" min="50" max="180" placeholder="80">
+              </div>
+            </div>
+
+            <div class="form-group form-group--full">
+              <label for="fmotivation">Proč chceš životní změnu? <span class="form-hint-inline">(nepovinné)</span></label>
+              <textarea id="fmotivation" name="Motivace" rows="4" placeholder="Napiš mi krátce, co tě přivedlo, co tě trápí a čeho chceš dosáhnout..."></textarea>
+            </div>
+          </div>
+
+          <!-- ── III. Právní blok ───────────────────── -->
+          <div class="form-section form-section--legal">
+            <h2 class="form-section__title">
+              <span class="form-section__num">III</span>
+              Právní prohlášení
+            </h2>
+
+            <div class="legal-checks">
+              <label class="legal-check legal-check--required">
+                <input type="checkbox" name="Souhlas VOP a GDPR" required value="ano">
+                <span>Souhlasím s <a href="#" class="gdpr-link">Všeobecnými obchodními podmínkami</a> a potvrzuji, že jsem se seznámil/a se <a href="#" class="gdpr-link">Zásadami ochrany osobních údajů</a>. <span class="req">*</span></span>
+              </label>
+
+              <label class="legal-check legal-check--required">
+                <input type="checkbox" name="Souhlas se zpracováním zdravotních dat" required value="ano">
+                <span>Uděluji výslovný souhlas se zpracováním údajů o svém zdravotním stavu (pro analýzu v aplikaci ZOF, vedení záznamů v Notion a interní evidenci poradce). Potvrzuji, že mi zdravotní stav umožňuje změnu návyků. <span class="req">*</span></span>
+              </label>
+
+              <label class="legal-check legal-check--required">
+                <input type="checkbox" name="Prohlášení o plnoletosti" required value="ano">
+                <span>Prohlašuji, že jsem plnoletý/á nebo jednám se souhlasem zákonného zástupce. <span class="req">*</span></span>
+              </label>
+
+              <label class="legal-check">
+                <input type="checkbox" name="Souhlas s anonymním použitím výsledků" value="ano">
+                <span>Souhlasím s anonymním použitím výsledků spolupráce (grafy progresu, anonymizované fotky) pro referenční účely poradce. <em>(Nepovinné)</em></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- ── Submit ─────────────────────────────── -->
+          <div class="form-submit">
+            <button type="submit" class="btn btn--primary btn--submit" id="submitBtn">
+              ZÁVAZNĚ ODESLAT ŽÁDOST O SLUŽBU
+            </button>
+            <p class="form-submit__note">Po odeslání tě kontaktuji do 2 pracovních dnů s fakturou a dalšími kroky.</p>
+            <p class="form-error" id="formError" hidden>Nepodařilo se odeslat formulář. Zkuste to prosím znovu nebo mi napište na <a href="mailto:koblas.nutricni@gmail.com">koblas.nutricni@gmail.com</a>.</p>
+          </div>
+
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer__inner">
+      <span>© 2026 Kryštof Koblas – Nutriční poradenství</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="objednavka.js"></script>
+</body>
+</html>
