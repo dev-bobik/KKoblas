@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chci vědět o volném místě – Kryštof Koblas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="cekacka.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo">
+        <img src="logotxt.png" alt="KKoblas logo">
+      </a>
+      <button class="header__toggle" aria-expanded="false" aria-label="Menu">
+        <span class="hamburger"></span>
+      </button>
+      <nav class="header__nav" aria-label="Hlavní navigace">
+        <ul class="nav__list">
+          <li><a class="nav__link" href="index.html#home">Home</a></li>
+          <li><a class="nav__link" href="index.html#about">O mně</a></li>
+          <li><a class="nav__link" href="jakpracuji.html">Jak pracuji</a></li>
+          <li><a class="nav__link" href="sluzby.html">Služby</a></li>
+          <li><a class="nav__link" href="kontakt.html">Kontakt</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="cekacka">
+      <div class="cekacka__inner">
+
+        <div class="cekacka__header">
+          <div class="cekacka__badge">Kapacita momentálně plná</div>
+          <h1 class="cekacka__title">Chci vědět<br>o volném místě</h1>
+          <p class="cekacka__lead">
+            Nech mi na sebe kontakt a jakmile budu nabírat nové klienty,
+            dám ti vědět jako jednomu z prvních.
+          </p>
+        </div>
+
+        <form class="cekacka__form" id="cekackaForm" novalidate>
+
+          <div class="ck-grid">
+            <div class="form-group">
+              <label for="ck-name">Jméno a příjmení <span class="req">*</span></label>
+              <input type="text" id="ck-name" name="Jméno a příjmení" required placeholder="Jan Novák" autocomplete="name">
+            </div>
+
+            <div class="form-group">
+              <label for="ck-email">E-mail <span class="req">*</span></label>
+              <input type="email" id="ck-email" name="E-mail" required placeholder="jan@email.cz" autocomplete="email">
+            </div>
+
+            <div class="form-group">
+              <label for="ck-phone">Telefon <span class="ck-optional">(nepovinné)</span></label>
+              <input type="tel" id="ck-phone" name="Telefon" placeholder="+420 777 000 000" autocomplete="tel">
+            </div>
+          </div>
+
+          <fieldset class="ck-services">
+            <legend>Mám zájem o <span class="ck-optional">(nepovinné)</span></legend>
+            <div class="ck-services__grid">
+              <label class="ck-check">
+                <input type="checkbox" name="Zájem o" value="START-UP">
+                <span>START-UP<br><em>6 900 Kč · 1 měsíc</em></span>
+              </label>
+              <label class="ck-check">
+                <input type="checkbox" name="Zájem o" value="MENTORING">
+                <span>MENTORING<br><em>15 900 Kč · 4 měsíce</em></span>
+              </label>
+              <label class="ck-check">
+                <input type="checkbox" name="Zájem o" value="ULTIMATE">
+                <span>ULTIMATE<br><em>23 900 Kč · 6 měsíců</em></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <label class="ck-gdpr">
+            <input type="checkbox" name="GDPR souhlas" required>
+            <span>
+              Souhlasím se zpracováním osobních údajů (jméno, e-mail, telefon)
+              za účelem informování o volné kapacitě spolupráce s Kryštofem Kobласem.
+              Souhlas mohu kdykoliv odvolat. <span class="req">*</span>
+            </span>
+          </label>
+
+          <div class="ck-submit">
+            <button type="submit" class="btn btn--primary ck-btn" id="ckSubmitBtn">
+              Chci vědět o volném místě
+            </button>
+            <p class="ck-note">Žádný spam. Napíšu ti jen jednou, až se uvolní místo.</p>
+            <p class="ck-error" id="ckError" hidden>
+              Nepodařilo se odeslat. Zkus to znovu nebo napiš přímo na
+              <a href="mailto:koblas.nutricni@gmail.com">koblas.nutricni@gmail.com</a>.
+            </p>
+          </div>
+
+        </form>
+
+        <!-- Success state (zobrazí se po odeslání) -->
+        <div class="ck-success" id="ckSuccess" hidden>
+          <div class="ck-success__icon">✓</div>
+          <h2 class="ck-success__title">Perfektní, zapsal jsem si tě!</h2>
+          <p class="ck-success__text">Jakmile se uvolní místo, budeš mezi prvními, kdo dostane zprávu.</p>
+          <a href="index.html" class="btn btn--ghost">Zpět na hlavní stránku</a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer__inner">
+      <span>© 2026 Kryštof Koblas – Nutriční poradenství</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="cekacka.js"></script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+.cekacka {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 65% 70% at 50% 45%, rgba(180,40,40,.12) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 60% at 50% 45%, rgba(30,80,210,.14) 0%, transparent 70%),
+    var(--cream);
+  min-height: calc(100vh - 90px);
+  padding: 70px 24px 100px;
+  display: flex;
+  align-items: center;
+}
+
+.cekacka::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='80'%3E%3Cg fill='none' stroke='%235daa80' stroke-linecap='round'%3E%3Cpath d='M0,12 C40,1 120,23 160,12' stroke-width='0.9' opacity='0.08'/%3E%3Cpath d='M0,38 C40,31 120,45 160,38' stroke-width='0.7' opacity='0.05'/%3E%3Cpath d='M0,62 C40,52 120,72 160,62' stroke-width='0.9' opacity='0.08'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 160px 80px;
+}
+
+.cekacka__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+/* ── Header ─────────────────────────────────────── */
+.cekacka__header {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cekacka__badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #e07070;
+  background: rgba(200,60,60,.1);
+  border: 1px solid rgba(200,60,60,.25);
+  border-radius: 6px;
+  padding: 5px 12px;
+}
+
+.cekacka__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.1;
+  color: var(--heading);
+}
+
+.cekacka__lead {
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: 46ch;
+}
+
+/* ── Form ───────────────────────────────────────── */
+.cekacka__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ck-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.ck-grid .form-group:last-child {
+  grid-column: 1 / -1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.form-group input {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: .9rem;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.form-group input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,.15);
+}
+
+.form-group input::placeholder { color: var(--muted); }
+
+.ck-optional {
+  font-size: .72rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.req { color: #e07070; font-size: .75rem; }
+
+/* ── Service checkboxes ─────────────────────────── */
+.ck-services {
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+
+.ck-services legend {
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--heading);
+  padding: 0 6px;
+  margin-bottom: 14px;
+}
+
+.ck-services__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.ck-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  font-size: .84rem;
+  color: var(--text);
+  line-height: 1.5;
+  transition: border-color .2s, background .2s;
+}
+
+.ck-check:hover {
+  border-color: rgba(201,168,76,.25);
+  background: rgba(201,168,76,.04);
+}
+
+.ck-check input[type="checkbox"] {
+  flex-shrink: 0;
+  accent-color: var(--gold);
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.ck-check em {
+  display: block;
+  font-style: normal;
+  font-size: .74rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ── GDPR ───────────────────────────────────────── */
+.ck-gdpr {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: .84rem;
+  color: var(--muted);
+  line-height: 1.65;
+  cursor: pointer;
+  padding: 14px 16px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 12px;
+  transition: border-color .2s;
+}
+
+.ck-gdpr:hover { border-color: rgba(201,168,76,.2); }
+
+.ck-gdpr input[type="checkbox"] {
+  flex-shrink: 0;
+  accent-color: var(--gold);
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+/* ── Submit ─────────────────────────────────────── */
+.ck-submit {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ck-btn {
+  padding: 16px 32px;
+  font-size: .96rem;
+  width: 100%;
+}
+
+.ck-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+.ck-note {
+  font-size: .78rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.ck-error {
+  font-size: .84rem;
+  color: #e07070;
+  text-align: center;
+}
+.ck-error a { color: var(--gold); }
+
+/* ── Success state ──────────────────────────────── */
+.ck-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+  padding: 48px 0;
+}
+
+.ck-success__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(93,170,128,.12);
+  border: 1px solid rgba(93,170,128,.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: var(--green-light);
+}
+
+.ck-success__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.8rem;
+  color: var(--heading);
+}
+
+.ck-success__text {
+  font-size: .96rem;
+  color: var(--muted);
+  max-width: 40ch;
+  line-height: 1.7;
+}
+
+/* ── Responsive ─────────────────────────────────── */
+@media (max-width: 560px) {
+  .ck-grid { grid-template-columns: 1fr; }
+  .ck-grid .form-group:last-child { grid-column: auto; }
+  .ck-services__grid { grid-template-columns: 1fr; }
+}

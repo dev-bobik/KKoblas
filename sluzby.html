@@ -24,6 +24,7 @@
         <ul class="nav__list">
           <li><a class="nav__link" href="index.html#home">Home</a></li>
           <li><a class="nav__link" href="index.html#about">O mně</a></li>
+          <li><a class="nav__link" href="jakpracuji.html">Jak pracuji</a></li>
           <li><a class="nav__link nav__link--active" href="sluzby.html">Služby</a></li>
           <li><a class="nav__link" href="kontakt.html">Kontakt</a></li>
         </ul>
@@ -89,7 +90,7 @@
             </div>
             <div class="pkg-btns pkg-btns--plno">
               <p class="plno-notice">Kapacita je momentálně plná.</p>
-              <a href="#waitlist" class="btn btn--outline btn--block">Chci vědět o volném místě</a>
+              <a href="cekacka.html" class="btn btn--outline btn--block">Chci vědět o volném místě</a>
             </div>
           </div>
         </article>
@@ -139,7 +140,7 @@
             </div>
             <div class="pkg-btns pkg-btns--plno">
               <p class="plno-notice">Kapacita je momentálně plná.</p>
-              <a href="#waitlist" class="btn btn--outline btn--block">Chci vědět o volném místě</a>
+              <a href="cekacka.html" class="btn btn--outline btn--block">Chci vědět o volném místě</a>
             </div>
           </div>
         </article>
@@ -192,7 +193,7 @@
             </div>
             <div class="pkg-btns pkg-btns--plno">
               <p class="plno-notice">Kapacita je momentálně plná.</p>
-              <a href="#waitlist" class="btn btn--outline btn--block">Chci vědět o volném místě</a>
+              <a href="cekacka.html" class="btn btn--outline btn--block">Chci vědět o volném místě</a>
             </div>
           </div>
         </article>
@@ -238,46 +239,6 @@
       </div>
     </section>
 
-    <!-- ── Waitlist (visible only in plno mode) ──── -->
-    <section class="waitlist" id="waitlist">
-      <div class="waitlist__inner">
-        <span class="eyebrow">Brzy budu nabírat</span>
-        <h2 class="waitlist__title">Nech mi na sebe kontakt</h2>
-        <p class="waitlist__lead">Kapacita je momentálně plná. Jakmile se uvolní místo, budeš mezi prvními, kdo se dozví.</p>
-
-        <form class="waitlist__form" id="waitlistForm" novalidate>
-          <div class="wl-row wl-row--3">
-            <div class="form-group">
-              <label for="wl-name">Jméno a příjmení <span class="req">*</span></label>
-              <input type="text" id="wl-name" name="Jméno" required placeholder="Jan Novák">
-            </div>
-            <div class="form-group">
-              <label for="wl-email">E-mail <span class="req">*</span></label>
-              <input type="email" id="wl-email" name="E-mail" required placeholder="jan@email.cz">
-            </div>
-            <div class="form-group">
-              <label for="wl-phone">Telefon</label>
-              <input type="tel" id="wl-phone" name="Telefon" placeholder="+420 777 000 000">
-            </div>
-          </div>
-
-          <fieldset class="wl-services">
-            <legend>Mám zájem o</legend>
-            <label class="wl-check"><input type="checkbox" name="Zájem o" value="START-UP"> START-UP</label>
-            <label class="wl-check"><input type="checkbox" name="Zájem o" value="MENTORING"> MENTORING</label>
-            <label class="wl-check"><input type="checkbox" name="Zájem o" value="ULTIMATE"> ULTIMATE</label>
-          </fieldset>
-
-          <label class="gdpr-check">
-            <input type="checkbox" name="GDPR souhlas" required>
-            <span>Souhlasím se zpracováním osobních údajů za účelem informování o volné kapacitě. <a href="#" class="gdpr-link">Zásady ochrany soukromí.</a></span>
-          </label>
-
-          <button type="submit" class="btn btn--primary">Chci vědět o volném místě</button>
-          <p class="wl-success" hidden>Perfektní! Ozvu se, jakmile budu nabírat nové klienty.</p>
-        </form>
-      </div>
-    </section>
 
 
   </main>

@@ -26,6 +26,7 @@
         <ul class="nav__list">
           <li><a class="nav__link" href="#home">Home</a></li>
           <li><a class="nav__link" href="#about">O mně</a></li>
+          <li><a class="nav__link" href="jakpracuji.html">Jak pracuji</a></li>
           <li><a class="nav__link" href="sluzby.html">Služby</a></li>
           <li><a class="nav__link" href="kontakt.html">Kontakt</a></li>
         </ul>
@@ -52,7 +53,7 @@
             k vaší vysněné váze a vitalitě pomocí metod, které skutečně fungují.
           </p>
           <div class="hero__actions">
-            <a href="kontakt.html" class="btn btn--primary">Chci začít správně</a>
+            <a href="sluzby.html" class="btn btn--primary js-cta">Chci začít správně</a>
           </div>
         </div>
 
@@ -172,7 +173,7 @@
             Společně nastavíme plán šitý přímo na míru vašim cílům, životnímu
             stylu i chutím.
           </p>
-          <a href="kontakt.html" class="btn btn--primary">Domluvit konzultaci</a>
+          <a href="sluzby.html" class="btn btn--primary js-cta">Domluvit konzultaci</a>
         </div>
 
       </div>
@@ -262,5 +263,19 @@
   </footer>
 
   <script src="script.js"></script>
+  <script>
+    // Pokud jsou všechny služby uzavřené → tlačítka vedou na kontakt
+    (function () {
+      var services = ['startup', 'mentoring', 'ultimate'];
+      var allPlno = services.every(function (s) {
+        return localStorage.getItem('kkoblas_status_' + s) === 'uzavreny';
+      });
+      if (allPlno) {
+        document.querySelectorAll('.js-cta').forEach(function (btn) {
+          btn.href = 'cekacka.html';
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
