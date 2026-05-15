@@ -9,7 +9,7 @@
  *  5. Hotovo – formulář bude chodit na koblas.nutricni@gmail.com
  * ══════════════════════════════════════════════════
  */
-var FORMSPREE_ID = 'YOUR_FORMSPREE_ID'; // <-- sem vlož své ID
+var WEB3FORMS_KEY = '962ce707-a0c7-4153-890d-415b6051d67a';
 
 // Mapování URL parametrů na zobrazovaná data
 var serviceMap = {
@@ -80,7 +80,8 @@ var serviceMap = {
 
     try {
       var formData = new FormData(form);
-      var response = await fetch('https://formspree.io/f/' + FORMSPREE_ID, {
+      formData.append('access_key', WEB3FORMS_KEY);
+      var response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         body: formData,
         headers: { Accept: 'application/json' }
@@ -88,8 +89,8 @@ var serviceMap = {
 
       if (response.ok) {
         // Předáme jméno a e-mail na potvrzovací stránku
-        var name  = form.querySelector('[name="Jméno a příjmení"]').value;
-        var email = form.querySelector('[name="E-mail"]').value;
+        var name  = form.querySelector('[name="Jmeno"]').value;
+        var email = form.querySelector('[name="Email"]').value;
         var dest  = 'dekujeme.html?sluzba=' + encodeURIComponent(svc.label)
                   + '&jmeno=' + encodeURIComponent(name)
                   + '&email=' + encodeURIComponent(email);

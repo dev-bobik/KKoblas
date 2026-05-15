@@ -1,9 +1,4 @@
-/**
- * Formspree setup:
- * 1. formspree.io → "+ New Form" → pojmenuj "KKoblas Cekacka"
- * 2. Zkopíruj ID a vlož níže místo YOUR_WAITLIST_ID
- */
-var FORMSPREE_ID = 'YOUR_WAITLIST_ID';
+var WEB3FORMS_KEY = '962ce707-a0c7-4153-890d-415b6051d67a';
 
 (function () {
   var form      = document.getElementById('cekackaForm');
@@ -27,19 +22,21 @@ var FORMSPREE_ID = 'YOUR_WAITLIST_ID';
 
     try {
       var data = new FormData(form);
-      var res  = await fetch('https://formspree.io/f/' + FORMSPREE_ID, {
+      data.append('access_key', WEB3FORMS_KEY);
+      var res  = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         body: data,
         headers: { Accept: 'application/json' }
       });
 
       if (res.ok) {
-        form.hidden = true;
-        if (successEl) successEl.hidden = false;
+        form.style.display = 'none';
+        if (successEl) successEl.style.display = 'flex';
       } else {
-        throw new Error();
+        throw new Error('server error ' + res.status);
       }
-    } catch (_) {
+    } catch (err) {
+      console.error('Web3Forms error:', err);
       submitBtn.disabled = false;
       submitBtn.textContent = 'Chci vědět o volném místě';
       if (errorEl) errorEl.hidden = false;

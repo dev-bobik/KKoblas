@@ -61,11 +61,13 @@
         </div>
 
         <form id="orderForm" novalidate>
-          <!-- Skrytá pole pro Formspree -->
-          <input type="hidden" name="_subject" id="emailSubject" value="Nová objednávka">
-          <input type="hidden" name="Služba" id="hiddenSluzba">
-          <input type="hidden" name="Způsob platby" id="hiddenPlatba">
-          <input type="hidden" name="K úhradě" id="hiddenPrice">
+          <!-- Web3Forms skrytá pole -->
+          <input type="hidden" name="subject" id="emailSubject" value="Nova objednavka – KKoblas">
+          <input type="hidden" name="from_name" value="Web KKoblas">
+          <input type="hidden" name="botcheck" value="" style="display:none">
+          <input type="hidden" name="Sluzba" id="hiddenSluzba">
+          <input type="hidden" name="Platba" id="hiddenPlatba">
+          <input type="hidden" name="Cena" id="hiddenPrice">
 
           <!-- ── I. Kontaktní údaje ─────────────────── -->
           <div class="form-section">
@@ -78,11 +80,11 @@
             <div class="form-grid form-grid--2">
               <div class="form-group">
                 <label for="fname">Jméno a příjmení <span class="req">*</span></label>
-                <input type="text" id="fname" name="Jméno a příjmení" required placeholder="Jan Novák" autocomplete="name">
+                <input type="text" id="fname" name="Jmeno" required placeholder="Jan Novák" autocomplete="name">
               </div>
               <div class="form-group">
                 <label for="femail">E-mail <span class="req">*</span></label>
-                <input type="email" id="femail" name="E-mail" required placeholder="jan@email.cz" autocomplete="email">
+                <input type="email" id="femail" name="Email" required placeholder="jan@email.cz" autocomplete="email">
               </div>
               <div class="form-group">
                 <label for="fphone">Telefonní číslo <span class="req">*</span></label>
@@ -91,28 +93,28 @@
               </div>
               <div class="form-group">
                 <label for="fstreet">Ulice a č. p. <span class="req">*</span></label>
-                <input type="text" id="fstreet" name="Ulice a č. p." required placeholder="Hlavní 123" autocomplete="street-address">
+                <input type="text" id="fstreet" name="Ulice" required placeholder="Hlavní 123" autocomplete="street-address">
               </div>
               <div class="form-group">
                 <label for="fcity">Město <span class="req">*</span></label>
-                <input type="text" id="fcity" name="Město" required placeholder="Praha" autocomplete="address-level2">
+                <input type="text" id="fcity" name="Mesto" required placeholder="Praha" autocomplete="address-level2">
               </div>
               <div class="form-group">
                 <label for="fzip">PSČ <span class="req">*</span></label>
-                <input type="text" id="fzip" name="PSČ" required placeholder="110 00" autocomplete="postal-code">
+                <input type="text" id="fzip" name="PSC" required placeholder="110 00" autocomplete="postal-code">
               </div>
               <div class="form-group">
                 <label for="fcountry">Země <span class="req">*</span></label>
-                <select id="fcountry" name="Země" required autocomplete="country-name">
+                <select id="fcountry" name="Zeme" required autocomplete="country-name">
                   <option value="">Vyberte zemi</option>
-                  <option value="Česká republika" selected>Česká republika</option>
+                  <option value="Ceska republika" selected>Česká republika</option>
                   <option value="Slovensko">Slovensko</option>
-                  <option value="Jiná">Jiná</option>
+                  <option value="Jina">Jiná</option>
                 </select>
               </div>
               <div class="form-group">
                 <label for="fico">IČO / DIČ <span class="form-hint-inline">(pro firmy)</span></label>
-                <input type="text" id="fico" name="IČO / DIČ" placeholder="12345678">
+                <input type="text" id="fico" name="ICO" placeholder="12345678">
               </div>
             </div>
           </div>
@@ -128,32 +130,32 @@
             <div class="form-grid form-grid--3">
               <div class="form-group">
                 <label for="fage">Věk <span class="req">*</span></label>
-                <input type="number" id="fage" name="Věk" required min="16" max="99" placeholder="28">
+                <input type="number" id="fage" name="Vek" required min="16" max="99" placeholder="28">
               </div>
               <div class="form-group">
                 <label for="fgender">Pohlaví <span class="req">*</span></label>
-                <select id="fgender" name="Pohlaví" required>
+                <select id="fgender" name="Pohlavi" required>
                   <option value="">Vyberte</option>
-                  <option value="Muž">Muž</option>
-                  <option value="Žena">Žena</option>
-                  <option value="Jiné">Jiné</option>
+                  <option value="Muz">Muž</option>
+                  <option value="Zena">Žena</option>
+                  <option value="Jine">Jiné</option>
                 </select>
               </div>
               <div class="form-group">
                 <label for="fheight">Výška (cm) <span class="req">*</span></label>
-                <input type="number" id="fheight" name="Výška (cm)" required min="140" max="220" placeholder="175">
+                <input type="number" id="fheight" name="Vyska_cm" required min="140" max="220" placeholder="175">
               </div>
               <div class="form-group">
                 <label for="fweight">Váha (kg) <span class="req">*</span></label>
-                <input type="number" id="fweight" name="Váha (kg)" required min="40" max="250" placeholder="80">
+                <input type="number" id="fweight" name="Vaha_kg" required min="40" max="250" placeholder="80">
               </div>
               <div class="form-group">
                 <label for="fhips">Obvod boků (cm) <span class="form-hint-inline">(vhodné)</span></label>
-                <input type="number" id="fhips" name="Obvod boků (cm)" min="60" max="180" placeholder="95">
+                <input type="number" id="fhips" name="Obvod_boku_cm" min="60" max="180" placeholder="95">
               </div>
               <div class="form-group">
                 <label for="fwaist">Obvod pasu (cm) <span class="form-hint-inline">(vhodné)</span></label>
-                <input type="number" id="fwaist" name="Obvod pasu (cm)" min="50" max="180" placeholder="80">
+                <input type="number" id="fwaist" name="Obvod_pasu_cm" min="50" max="180" placeholder="80">
               </div>
             </div>
 
@@ -172,22 +174,22 @@
 
             <div class="legal-checks">
               <label class="legal-check legal-check--required">
-                <input type="checkbox" name="Souhlas VOP a GDPR" required value="ano">
+                <input type="checkbox" name="Souhlas_VOP_GDPR" required value="ano">
                 <span>Souhlasím s <a href="#" class="gdpr-link">Všeobecnými obchodními podmínkami</a> a potvrzuji, že jsem se seznámil/a se <a href="#" class="gdpr-link">Zásadami ochrany osobních údajů</a>. <span class="req">*</span></span>
               </label>
 
               <label class="legal-check legal-check--required">
-                <input type="checkbox" name="Souhlas se zpracováním zdravotních dat" required value="ano">
+                <input type="checkbox" name="Souhlas_zdravotni_data" required value="ano">
                 <span>Uděluji výslovný souhlas se zpracováním údajů o svém zdravotním stavu (pro analýzu v aplikaci ZOF, vedení záznamů v Notion a interní evidenci poradce). Potvrzuji, že mi zdravotní stav umožňuje změnu návyků. <span class="req">*</span></span>
               </label>
 
               <label class="legal-check legal-check--required">
-                <input type="checkbox" name="Prohlášení o plnoletosti" required value="ano">
+                <input type="checkbox" name="Prohlaseni_plnoletost" required value="ano">
                 <span>Prohlašuji, že jsem plnoletý/á nebo jednám se souhlasem zákonného zástupce. <span class="req">*</span></span>
               </label>
 
               <label class="legal-check">
-                <input type="checkbox" name="Souhlas s anonymním použitím výsledků" value="ano">
+                <input type="checkbox" name="Souhlas_anonymni" value="ano">
                 <span>Souhlasím s anonymním použitím výsledků spolupráce (grafy progresu, anonymizované fotky) pro referenční účely poradce. <em>(Nepovinné)</em></span>
               </label>
             </div>

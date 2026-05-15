@@ -47,15 +47,20 @@
 
         <form class="cekacka__form" id="cekackaForm" novalidate>
 
+          <!-- Web3Forms skrytá pole -->
+          <input type="hidden" name="subject" value="Nova zprava z cekaci listiny – KKoblas">
+          <input type="hidden" name="from_name" value="Web KKoblas">
+          <input type="hidden" name="botcheck" value="" style="display:none">
+
           <div class="ck-grid">
             <div class="form-group">
               <label for="ck-name">Jméno a příjmení <span class="req">*</span></label>
-              <input type="text" id="ck-name" name="Jméno a příjmení" required placeholder="Jan Novák" autocomplete="name">
+              <input type="text" id="ck-name" name="Jmeno" required placeholder="Jan Novák" autocomplete="name">
             </div>
 
             <div class="form-group">
               <label for="ck-email">E-mail <span class="req">*</span></label>
-              <input type="email" id="ck-email" name="E-mail" required placeholder="jan@email.cz" autocomplete="email">
+              <input type="email" id="ck-email" name="Email" required placeholder="jan@email.cz" autocomplete="email">
             </div>
 
             <div class="form-group">
@@ -68,22 +73,22 @@
             <legend>Mám zájem o <span class="ck-optional">(nepovinné)</span></legend>
             <div class="ck-services__grid">
               <label class="ck-check">
-                <input type="checkbox" name="Zájem o" value="START-UP">
+                <input type="checkbox" name="Zajem" value="START-UP">
                 <span>START-UP<br><em>6 900 Kč · 1 měsíc</em></span>
               </label>
               <label class="ck-check">
-                <input type="checkbox" name="Zájem o" value="MENTORING">
+                <input type="checkbox" name="Zajem" value="MENTORING">
                 <span>MENTORING<br><em>15 900 Kč · 4 měsíce</em></span>
               </label>
               <label class="ck-check">
-                <input type="checkbox" name="Zájem o" value="ULTIMATE">
+                <input type="checkbox" name="Zajem" value="ULTIMATE">
                 <span>ULTIMATE<br><em>23 900 Kč · 6 měsíců</em></span>
               </label>
             </div>
           </fieldset>
 
           <label class="ck-gdpr">
-            <input type="checkbox" name="GDPR souhlas" required>
+            <input type="checkbox" name="GDPR" required>
             <span>
               Souhlasím se zpracováním osobních údajů (jméno, e-mail, telefon)
               za účelem informování o volné kapacitě spolupráce s Kryštofem Kobласem.
