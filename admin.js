@@ -1,29 +1,26 @@
-/**
- * Změn heslo níže na vlastní:
- */
-var ADMIN_PASS   = 'koblas123';
-var SESSION_KEY  = 'kkoblas_admin_session';
+var ADMIN_PASS = 'koblas123';
+var SESSION_KEY = 'kkoblas_admin_session';
+var SERVICES    = ['startup', 'mentoring', 'ultimate'];
 
-var SERVICES = ['startup', 'mentoring', 'ultimate'];
-var STATUS_KEY = function (s) { return 'kkoblas_status_' + s; };
-
-// ── Auth ────────────────────────────────────────
 var lockScreen = document.getElementById('lockScreen');
-var consolEl   = document.getElementById('console');
+var consolEl   = document.getElementById('consolEl');
 var lockForm   = document.getElementById('lockForm');
 var lockInput  = document.getElementById('lockInput');
 var lockError  = document.getElementById('lockError');
+var deployBar  = document.getElementById('deployBar');
+var deployMsg  = document.getElementById('deployMsg');
 
+var currentStatus = { startup: 'volny', mentoring: 'volny', ultimate: 'volny' };
+
+// ── Auth ─────────────────────────────────────────
 function unlock() {
   lockScreen.style.display = 'none';
   consolEl.hidden = false;
   sessionStorage.setItem(SESSION_KEY, '1');
-  renderAll();
+  loadStatus();
 }
 
-if (sessionStorage.getItem(SESSION_KEY) === '1') {
-  unlock();
-}
+if (sessionStorage.getItem(SESSION_KEY) === '1') unlock();
 
 lockForm.addEventListener('submit', function (e) {
   e.preventDefault();
@@ -38,48 +35,68 @@ lockForm.addEventListener('submit', function (e) {
   }
 });
 
-// ── State helpers ────────────────────────────────
-function getStatus(sluzba) {
-  return localStorage.getItem(STATUS_KEY(sluzba)) || 'volny';
+// ── API ───────────────────────────────────────────
+async function loadStatus() {
+  setDeploy('Načítám stav...', 'loading');
+  try {
+    var res  = await fetch('/api/status');
+    var data = await res.json();
+    currentStatus = data;
+    renderAll();
+    deployBar.hidden = true;
+  } catch {
+    setDeploy('Chyba načítání — funguje jen na živém webu', 'error');
+    renderAll();
+  }
 }
 
-function setStatus(sluzba, val) {
-  localStorage.setItem(STATUS_KEY(sluzba), val);
+async function saveStatus() {
+  setDeploy('⚡ Ukládám...', 'loading');
+  try {
+    var res = await fetch('/api/status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.assign({ password: ADMIN_PASS }, currentStatus))
+    });
+    if (!res.ok) throw new Error(res.status);
+    setDeploy('✓ Uloženo — změna je okamžitě živá', 'ok');
+    setTimeout(function () { deployBar.hidden = true; }, 4000);
+  } catch (e) {
+    setDeploy('✗ Chyba: ' + e.message, 'error');
+  }
+}
+
+// ── Deploy bar ────────────────────────────────────
+function setDeploy(msg, state) {
+  deployBar.hidden = false;
+  deployMsg.textContent = msg;
+  deployBar.className = 'deploy-bar deploy-bar--' + state;
 }
 
 // ── Render ───────────────────────────────────────
 function renderStation(sluzba) {
-  var status    = getStatus(sluzba);
+  var isOpen    = (currentStatus[sluzba] || 'volny') === 'volny';
   var station   = document.getElementById('station-' + sluzba);
-  var led       = document.getElementById('led-' + sluzba);
   var statusTxt = document.getElementById('statusText-' + sluzba);
   var btnLabel  = document.getElementById('btnLabel-' + sluzba);
-
   if (!station) return;
-
-  var isOpen = status === 'volny';
-  station.classList.toggle('volny',     isOpen);
+  station.classList.toggle('volny',    isOpen);
   station.classList.toggle('uzavreny', !isOpen);
-
   if (statusTxt) statusTxt.textContent = isOpen ? 'VOLNÝ' : 'UZAVŘENÝ';
   if (btnLabel)  btnLabel.textContent  = isOpen ? 'UZAVŘÍT' : 'OTEVŘÍT';
 }
 
-function renderAll() {
-  SERVICES.forEach(renderStation);
-}
+function renderAll() { SERVICES.forEach(renderStation); }
 
 // ── Toggle ───────────────────────────────────────
-function toggle(sluzba) {
-  var current = getStatus(sluzba);
-  var next    = current === 'volny' ? 'uzavreny' : 'volny';
-  var label   = sluzba.toUpperCase();
-  var action  = next === 'uzavreny' ? 'UZAVŘÍT' : 'OTEVŘÍT';
-
-  if (!confirm(action + ' službu ' + label + '?')) return;
-
-  setStatus(sluzba, next);
+async function toggle(sluzba) {
+  var prev   = currentStatus[sluzba] || 'volny';
+  var next   = prev === 'volny' ? 'uzavreny' : 'volny';
+  var action = next === 'uzavreny' ? 'UZAVŘÍT' : 'OTEVŘÍT';
+  if (!confirm(action + ' službu ' + sluzba.toUpperCase() + '?')) return;
+  currentStatus[sluzba] = next;
   renderStation(sluzba);
+  await saveStatus();
 }
 
 SERVICES.forEach(function (sluzba) {
@@ -88,22 +105,13 @@ SERVICES.forEach(function (sluzba) {
 });
 
 // ── Master controls ──────────────────────────────
-document.getElementById('masterClose').addEventListener('click', function () {
-  if (!confirm('Uzavřít VŠECHNY služby?')) return;
-  SERVICES.forEach(function (s) { setStatus(s, 'uzavreny'); });
+async function setAll(val) {
+  var action = val === 'uzavreny' ? 'Uzavřít VŠECHNY?' : 'Otevřít VŠECHNY?';
+  if (!confirm(action)) return;
+  SERVICES.forEach(function (s) { currentStatus[s] = val; });
   renderAll();
-});
+  await saveStatus();
+}
 
-document.getElementById('masterOpen').addEventListener('click', function () {
-  if (!confirm('Otevřít VŠECHNY služby?')) return;
-  SERVICES.forEach(function (s) { setStatus(s, 'volny'); });
-  renderAll();
-});
-
-// Synchronizace mezi záložkami (pokud má admin otevřené obě stránky)
-window.addEventListener('storage', function (e) {
-  if (e.key && e.key.startsWith('kkoblas_status_')) {
-    var sluzba = e.key.replace('kkoblas_status_', '');
-    renderStation(sluzba);
-  }
-});
+document.getElementById('masterClose').addEventListener('click', function () { setAll('uzavreny'); });
+document.getElementById('masterOpen').addEventListener('click',  function () { setAll('volny'); });

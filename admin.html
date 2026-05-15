@@ -15,14 +15,7 @@
       <p class="lock-title">RESTRICTED ACCESS</p>
       <p class="lock-sub">Nutriční control panel</p>
       <form id="lockForm">
-        <input
-          type="password"
-          id="lockInput"
-          class="lock-input"
-          placeholder="HESLO"
-          autocomplete="off"
-          autofocus
-        >
+        <input type="password" id="lockInput" class="lock-input" placeholder="HESLO" autocomplete="off" autofocus>
         <button type="submit" class="lock-btn">VSTOUPIT</button>
         <p class="lock-error" id="lockError" hidden>Nesprávné heslo.</p>
       </form>
@@ -30,12 +23,12 @@
   </div>
 
   <!-- ── Hlavní konzole ────────────────────────── -->
-  <div class="console" id="console" hidden>
+  <div class="console" id="consolEl" hidden>
 
     <header class="console-header">
       <div class="console-header__left">
         <span class="console-brand">KK&nbsp;NUTRIČNÍ</span>
-        <span class="console-sub">CONTROL PANEL&nbsp;v1.0</span>
+        <span class="console-sub">CONTROL PANEL&nbsp;v2.0</span>
       </div>
       <div class="console-header__right">
         <span class="sys-indicator"></span>
@@ -43,23 +36,25 @@
       </div>
     </header>
 
+    <div class="deploy-bar" id="deployBar" hidden>
+      <span id="deployMsg"></span>
+    </div>
+
     <div class="scanlines" aria-hidden="true"></div>
 
     <main class="console-grid">
 
       <!-- ── START-UP ───────── -->
-      <div class="station" id="station-startup" data-sluzba="startup">
+      <div class="station" id="station-startup">
         <div class="station-label">START-UP</div>
         <div class="station-duration">1 měsíc · 6 900 Kč</div>
-
-        <div class="status-display" id="status-startup">
+        <div class="status-display">
           <span class="status-led" id="led-startup"></span>
           <span class="status-text" id="statusText-startup">VOLNÝ</span>
         </div>
-
         <div class="btn-mount">
           <div class="btn-ring">
-            <button class="launch-btn" id="btn-startup" aria-label="Přepnout START-UP">
+            <button class="launch-btn" id="btn-startup">
               <span class="launch-btn__label" id="btnLabel-startup">UZAVŘÍT</span>
             </button>
           </div>
@@ -67,18 +62,16 @@
       </div>
 
       <!-- ── MENTORING ──────── -->
-      <div class="station" id="station-mentoring" data-sluzba="mentoring">
+      <div class="station" id="station-mentoring">
         <div class="station-label">MENTORING</div>
         <div class="station-duration">4 měsíce · 15 900 Kč</div>
-
-        <div class="status-display" id="status-mentoring">
+        <div class="status-display">
           <span class="status-led" id="led-mentoring"></span>
           <span class="status-text" id="statusText-mentoring">VOLNÝ</span>
         </div>
-
         <div class="btn-mount">
           <div class="btn-ring">
-            <button class="launch-btn" id="btn-mentoring" aria-label="Přepnout MENTORING">
+            <button class="launch-btn" id="btn-mentoring">
               <span class="launch-btn__label" id="btnLabel-mentoring">UZAVŘÍT</span>
             </button>
           </div>
@@ -86,18 +79,16 @@
       </div>
 
       <!-- ── ULTIMATE ───────── -->
-      <div class="station" id="station-ultimate" data-sluzba="ultimate">
+      <div class="station" id="station-ultimate">
         <div class="station-label">ULTIMATE</div>
         <div class="station-duration">6 měsíců · 23 900 Kč</div>
-
-        <div class="status-display" id="status-ultimate">
+        <div class="status-display">
           <span class="status-led" id="led-ultimate"></span>
           <span class="status-text" id="statusText-ultimate">VOLNÝ</span>
         </div>
-
         <div class="btn-mount">
           <div class="btn-ring">
-            <button class="launch-btn" id="btn-ultimate" aria-label="Přepnout ULTIMATE">
+            <button class="launch-btn" id="btn-ultimate">
               <span class="launch-btn__label" id="btnLabel-ultimate">UZAVŘÍT</span>
             </button>
           </div>
@@ -106,18 +97,13 @@
 
     </main>
 
-    <!-- ── Master controls ───────────────────────── -->
     <div class="master-controls">
-      <button class="master-btn master-btn--close" id="masterClose">
-        ▼ UZAVŘÍT VŠE
-      </button>
-      <button class="master-btn master-btn--open" id="masterOpen">
-        ▲ OTEVŘÍT VŠE
-      </button>
+      <button class="master-btn master-btn--close" id="masterClose">▼ UZAVŘÍT VŠE</button>
+      <button class="master-btn master-btn--open"  id="masterOpen">▲ OTEVŘÍT VŠE</button>
     </div>
 
     <footer class="console-footer">
-      <span>Změny se projeví okamžitě na stránce sluzby.html</span>
+      <span>Změny jsou okamžitě živé pro všechny návštěvníky</span>
       <a href="sluzby.html" target="_blank" class="footer-link">Otevřít stránku →</a>
     </footer>
 

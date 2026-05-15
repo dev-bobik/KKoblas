@@ -264,18 +264,18 @@
 
   <script src="script.js"></script>
   <script>
-    // Pokud jsou všechny služby uzavřené → tlačítka vedou na kontakt
-    (function () {
-      var services = ['startup', 'mentoring', 'ultimate'];
-      var allPlno = services.every(function (s) {
-        return localStorage.getItem('kkoblas_status_' + s) === 'uzavreny';
-      });
-      if (allPlno) {
-        document.querySelectorAll('.js-cta').forEach(function (btn) {
-          btn.href = 'cekacka.html';
-        });
-      }
-    })();
+    fetch('status.json?_=' + Date.now())
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var services = ['startup', 'mentoring', 'ultimate'];
+        var allPlno  = services.every(function (s) { return data[s] === 'uzavreny'; });
+        if (allPlno) {
+          document.querySelectorAll('.js-cta').forEach(function (btn) {
+            btn.href = 'cekacka.html';
+          });
+        }
+      })
+      .catch(function () {});
   </script>
 </body>
 </html>

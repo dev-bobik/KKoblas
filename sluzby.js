@@ -1,39 +1,26 @@
 (function () {
-  var SERVICES   = ['startup', 'mentoring', 'ultimate'];
-  var STATUS_KEY = function (s) { return 'kkoblas_status_' + s; };
+  var SERVICES = ['startup', 'mentoring', 'ultimate'];
 
-  // ── Aplikuj stavy ze záložky ─────────────────
-  function applyStatuses() {
-    var anyPlno = false;
-
+  function applyStatuses(data) {
     SERVICES.forEach(function (sluzba) {
-      var status = localStorage.getItem(STATUS_KEY(sluzba)) || 'volny';
+      var status = (data && data[sluzba]) || 'volny';
       var card   = document.querySelector('[data-sluzba="' + sluzba + '"]');
       if (!card) return;
-
-      if (status === 'uzavreny') {
-        card.classList.add('plno');
-        anyPlno = true;
-      } else {
-        card.classList.remove('plno');
-      }
+      card.classList.toggle('plno', status === 'uzavreny');
     });
-
-    // Zobraz waitlist sekci pokud je alespoň jedna služba uzavřená
-    var waitlist = document.querySelector('.waitlist');
-    if (waitlist) waitlist.style.display = anyPlno ? 'block' : '';
   }
 
-  applyStatuses();
+  fetch('/api/status')
+    .then(function (r) { return r.json(); })
+    .then(applyStatuses)
+    .catch(function () {
+      // fallback pro lokální vývoj
+      fetch('status.json?_=' + Date.now())
+        .then(function (r) { return r.json(); })
+        .then(applyStatuses)
+        .catch(function () { applyStatuses({}); });
+    });
 
-  // Aktualizuj když se změní localStorage (admin v jiné záložce)
-  window.addEventListener('storage', function (e) {
-    if (e.key && e.key.startsWith('kkoblas_status_')) {
-      applyStatuses();
-    }
-  });
-
-  // ── Smooth scroll pro #inbody kotvu ─────────
   document.querySelectorAll('a[href="#inbody"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
       var target = document.getElementById('inbody');
