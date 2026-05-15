@@ -1,5 +1,4 @@
 const DEFAULT = { startup: 'volny', mentoring: 'volny', ultimate: 'volny' };
-const PASS     = 'koblas123';
 
 export async function onRequestGet(context) {
   try {
@@ -18,6 +17,7 @@ export async function onRequestGet(context) {
 export async function onRequestPost(context) {
   try {
     const body = await context.request.json();
+    const PASS = context.env.ADMIN_PASS || 'koblas123';
     if (body.password !== PASS) {
       return new Response('Unauthorized', { status: 401 });
     }
