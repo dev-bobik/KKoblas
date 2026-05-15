@@ -1,6 +1,6 @@
-var ADMIN_PASS = 'koblas123';
-var SESSION_KEY = 'kkoblas_admin_session';
-var SERVICES    = ['startup', 'mentoring', 'ultimate'];
+var SESSION_KEY  = 'kkoblas_admin_session';
+var ENTERED_PASS = '';
+var SERVICES     = ['startup', 'mentoring', 'ultimate'];
 
 var lockScreen = document.getElementById('lockScreen');
 var consolEl   = document.getElementById('consolEl');
@@ -22,16 +22,30 @@ function unlock() {
 
 if (sessionStorage.getItem(SESSION_KEY) === '1') unlock();
 
-lockForm.addEventListener('submit', function (e) {
+lockForm.addEventListener('submit', async function (e) {
   e.preventDefault();
-  if (lockInput.value === ADMIN_PASS) {
-    unlock();
-  } else {
+  var typed = lockInput.value;
+  try {
+    var res = await fetch('/api/status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: typed, startup: 'volny', mentoring: 'volny', ultimate: 'volny' })
+    });
+    var data = await res.json();
+    if (res.ok && data.ok) {
+      ENTERED_PASS = typed;
+      currentStatus = data.status;
+      unlock();
+    } else {
+      lockInput.value = '';
+      lockError.hidden = false;
+      lockError.style.animation = 'none';
+      void lockError.offsetWidth;
+      lockError.style.animation = 'shake .3s ease';
+    }
+  } catch {
     lockInput.value = '';
     lockError.hidden = false;
-    lockError.style.animation = 'none';
-    void lockError.offsetWidth;
-    lockError.style.animation = 'shake .3s ease';
   }
 });
 
@@ -56,7 +70,7 @@ async function saveStatus() {
     var res = await fetch('/api/status', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(Object.assign({ password: ADMIN_PASS }, currentStatus))
+      body: JSON.stringify(Object.assign({ password: ENTERED_PASS }, currentStatus))
     });
     if (!res.ok) throw new Error(res.status);
     setDeploy('✓ Uloženo — změna je okamžitě živá', 'ok');
