@@ -26,13 +26,15 @@ lockForm.addEventListener('submit', async function (e) {
   e.preventDefault();
   var typed = lockInput.value;
   try {
-    var res = await fetch('/api/status', {
+    var getRes  = await fetch('/api/status');
+    var current = await getRes.json();
+    var postRes = await fetch('/api/status', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: typed, startup: 'volny', mentoring: 'volny', ultimate: 'volny' })
+      body: JSON.stringify(Object.assign({ password: typed }, current))
     });
-    var data = await res.json();
-    if (res.ok && data.ok) {
+    var data = await postRes.json();
+    if (postRes.ok && data.ok) {
       ENTERED_PASS = typed;
       currentStatus = data.status;
       unlock();
