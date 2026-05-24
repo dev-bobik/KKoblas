@@ -1,8 +1,9 @@
 export async function onRequestGet(context) {
   const key = context.env.RESEND_API_KEY;
+  const availableEnvKeys = Object.keys(context.env || {});
 
   if (!key) {
-    return Response.json({ error: 'RESEND_API_KEY neni nastaveny' });
+    return Response.json({ error: 'RESEND_API_KEY neni nastaveny', dostupnePromenne: availableEnvKeys });
   }
 
   // Zkus odeslat testovaci email
