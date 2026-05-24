@@ -1,9 +1,9 @@
-/* ── Thank you page ─────────────────────────────── */
+﻿/* ── Thank you page ─────────────────────────────── */
 .thankyou {
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 60% 70% at 50% 40%, rgba(30,80,210,.18) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 70% at 50% 40%, rgba(15,125,180,.18) 0%, transparent 65%),
     var(--cream);
   min-height: calc(100vh - 90px);
   padding: 80px 24px 100px;
@@ -15,7 +15,7 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='80'%3E%3Cg fill='none' stroke='%235daa80' stroke-linecap='round'%3E%3Cpath d='M0,12 C40,1 120,23 160,12' stroke-width='0.9' opacity='0.08'/%3E%3Cpath d='M0,38 C40,31 120,45 160,38' stroke-width='0.7' opacity='0.05'/%3E%3Cpath d='M0,62 C40,52 120,72 160,62' stroke-width='0.9' opacity='0.08'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='80'%3E%3Cg fill='none' stroke='%234dae8c' stroke-linecap='round'%3E%3Cpath d='M0,12 C40,1 120,23 160,12' stroke-width='0.9' opacity='0.08'/%3E%3Cpath d='M0,38 C40,31 120,45 160,38' stroke-width='0.7' opacity='0.05'/%3E%3Cpath d='M0,62 C40,52 120,72 160,62' stroke-width='0.9' opacity='0.08'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 160px 80px;
 }
@@ -92,8 +92,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(93,170,128,.12);
-  border: 1px solid rgba(93,170,128,.25);
+  background: rgba(77,174,140,.12);
+  border: 1px solid rgba(77,174,140,.25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -169,3 +169,4 @@
   .step { flex-direction: column; gap: 12px; }
   .thankyou { padding: 60px 16px 80px; }
 }
+

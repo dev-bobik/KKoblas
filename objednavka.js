@@ -6,12 +6,12 @@ var serviceMap = {
   },
   mentoring: {
     label: 'MENTORING – Individuální vedení',
-    jednorizove: { platba: 'Jednorázová platba', price: '15 900 Kč' },
+    jednorizove: { platba: 'Jednorázová platba', price: '14 700 Kč' },
     splatky:     { platba: 'Splátkový kalendář', price: '7 500 Kč (1. splátka)' }
   },
   ultimate: {
     label: 'ULTIMATE – Maximální výkon a biohacking',
-    jednorizove: { platba: 'Jednorázová platba', price: '23 900 Kč' },
+    jednorizove: { platba: 'Jednorázová platba', price: '22 300 Kč' },
     splatky:     { platba: 'Splátkový kalendář', price: '11 900 Kč (1. splátka)' }
   }
 };

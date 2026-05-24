@@ -36,8 +36,64 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }, { threshold: 0.12 });
 
-  document.querySelectorAll('.service-card, .about__photo-stack, .about__content, .contact__card').forEach(el => {
+  document.querySelectorAll('.about__photo-stack, .about__gallery, .about__content, .contact__card, .cta-card').forEach(el => {
     el.classList.add('fade-in');
     observer.observe(el);
+  });
+
+  // Service cards – staggered entrance + subtle float
+  const serviceCards = document.querySelectorAll('.service-card');
+
+  const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const cards = entry.target.querySelectorAll('.service-card');
+        cards.forEach((card, i) => {
+          setTimeout(() => {
+            card.classList.add('sc-visible');
+          }, i * 120);
+        });
+        cardObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  const grid = document.querySelector('.services__grid');
+  if (grid) {
+    serviceCards.forEach(card => card.classList.add('sc-hidden'));
+    cardObserver.observe(grid);
+  }
+
+  // Float animation on CTA card
+  const ctaCard = document.querySelector('.cta-card');
+  if (ctaCard) {
+    let ctaFrame;
+    function ctaFloat() {
+      const y = Math.sin((Date.now() / 1000) / 5 * Math.PI * 2) * 6;
+      ctaCard.style.setProperty('--float-y', y + 'px');
+      ctaFrame = requestAnimationFrame(ctaFloat);
+    }
+    ctaCard.addEventListener('mouseenter', () => cancelAnimationFrame(ctaFrame));
+    ctaCard.addEventListener('mouseleave', () => { ctaFrame = requestAnimationFrame(ctaFloat); });
+    ctaFrame = requestAnimationFrame(ctaFloat);
+  }
+
+  // Subtle float animation on service cards
+  serviceCards.forEach((card, i) => {
+    const speed  = 4.5 + i * 0.7;
+    const offset = i * 1.1;
+    let frame;
+
+    function floatTick() {
+      const t = (Date.now() / 1000 + offset) % speed;
+      const y = Math.sin((t / speed) * Math.PI * 2) * 5;
+      card.style.setProperty('--float-y', y + 'px');
+      frame = requestAnimationFrame(floatTick);
+    }
+
+    card.addEventListener('mouseenter', () => cancelAnimationFrame(frame));
+    card.addEventListener('mouseleave', () => { frame = requestAnimationFrame(floatTick); });
+
+    setTimeout(() => { frame = requestAnimationFrame(floatTick); }, i * 120 + 600);
   });
 });
