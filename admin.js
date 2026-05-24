@@ -219,27 +219,31 @@ function loadAnalytics() {
       }
 
       // top stránky
-      var pageLabels = { '/': 'Úvod', '/sluzby.html': 'Služby', '/omne.html': 'O mně',
-        '/jakpracuji.html': 'Jak pracuji', '/faq.html': 'FAQ', '/kontakt.html': 'Kontakt',
-        '/objednavka.html': 'Objednávka', '/dekujeme.html': 'Děkujeme' };
-      pagesEl.innerHTML = (json.topPages || []).map(function (p) {
-        var lbl = pageLabels[p.path] || p.path;
-        return '<li class="analytics-page-row">'
-          + '<span class="analytics-page-name">' + lbl + '</span>'
-          + '<span class="analytics-page-count">' + p.count + '</span>'
-          + '</li>';
-      }).join('') || '<li class="analytics-page-row"><span class="analytics-page-name" style="color:var(--sub)">žádná data</span></li>';
+      if (pagesEl) {
+        var pageLabels = { '/': 'Úvod', '/sluzby.html': 'Služby', '/omne.html': 'O mně',
+          '/jakpracuji.html': 'Jak pracuji', '/faq.html': 'FAQ', '/kontakt.html': 'Kontakt',
+          '/objednavka.html': 'Objednávka', '/dekujeme.html': 'Děkujeme' };
+        pagesEl.innerHTML = (json.topPages || []).map(function (p) {
+          var lbl = pageLabels[p.path] || p.path;
+          return '<li class="analytics-page-row">'
+            + '<span class="analytics-page-name">' + lbl + '</span>'
+            + '<span class="analytics-page-count">' + p.count + '</span>'
+            + '</li>';
+        }).join('') || '<li class="analytics-page-row"><span class="analytics-page-name" style="color:var(--sub)">žádná data</span></li>';
+      }
 
       // zařízení
-      var deviceLabels = { 'Desktop': 'Desktop', 'Mobile': 'Mobil', 'Tablet': 'Tablet', 'Bot': 'Bot' };
-      devicesEl.innerHTML = (json.devices || []).map(function (d) {
-        var lbl = deviceLabels[d.type] || d.type;
-        return '<li class="analytics-device-row">'
-          + '<span class="analytics-device-name">' + lbl + '</span>'
-          + '<span class="analytics-device-bar"><span class="analytics-device-fill" style="width:' + d.pct + '%"></span></span>'
-          + '<span class="analytics-device-pct">' + d.pct + '%</span>'
-          + '</li>';
-      }).join('') || '<li class="analytics-device-row"><span class="analytics-device-name" style="color:var(--sub)">žádná data</span></li>';
+      if (devicesEl) {
+        var deviceLabels = { 'Desktop': 'Desktop', 'Mobile': 'Mobil', 'Tablet': 'Tablet', 'Bot': 'Bot' };
+        devicesEl.innerHTML = (json.devices || []).map(function (d) {
+          var lbl = deviceLabels[d.type] || d.type;
+          return '<li class="analytics-device-row">'
+            + '<span class="analytics-device-name">' + lbl + '</span>'
+            + '<span class="analytics-device-bar"><span class="analytics-device-fill" style="width:' + d.pct + '%"></span></span>'
+            + '<span class="analytics-device-pct">' + d.pct + '%</span>'
+            + '</li>';
+        }).join('') || '<li class="analytics-device-row"><span class="analytics-device-name" style="color:var(--sub)">žádná data</span></li>';
+      }
 
       dataEl.hidden = false;
     })
