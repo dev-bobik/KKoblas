@@ -136,48 +136,11 @@
     </div>
 
     <!-- ── Návštěvnost ────────────────────────────── -->
-    <div class="analytics-panel" id="analyticsPanel">
+    <div class="analytics-panel">
       <div class="analytics-header">
         <span class="station-label">NÁVŠTĚVNOST</span>
-        <span class="station-duration">Posledních 7 dní</span>
       </div>
-      <div class="analytics-loading" id="analyticsLoading">Načítám...</div>
-      <div class="analytics-err" id="analyticsErr" hidden></div>
-      <div class="analytics-data" id="analyticsData" hidden>
-
-        <!-- dva grafy -->
-        <div class="analytics-charts">
-          <div class="analytics-chart-block">
-            <div class="analytics-chart-title">
-              DNES — <span id="analyticsToday">—</span> zobrazení
-            </div>
-            <div class="analytics-bars analytics-bars--tall" id="analyticsBarsToday"></div>
-          </div>
-          <div class="analytics-chart-block">
-            <div class="analytics-chart-title">
-              7 DNÍ — <span id="analyticsPageviews">—</span> zobrazení
-            </div>
-            <div class="analytics-bars analytics-bars--tall" id="analyticsBars7d"></div>
-          </div>
-        </div>
-
-        <!-- spodní sekce -->
-        <div class="analytics-details">
-
-          <!-- top stránky -->
-          <div class="analytics-block">
-            <div class="analytics-block__title">TOP STRÁNKY</div>
-            <ul class="analytics-pages" id="analyticsPages"></ul>
-          </div>
-
-          <!-- zařízení -->
-          <div class="analytics-block">
-            <div class="analytics-block__title">ZAŘÍZENÍ</div>
-            <ul class="analytics-devices" id="analyticsDevices"></ul>
-          </div>
-
-        </div>
-      </div>
+      <div id="anBody"><span class="an-loading">Načítám...</span></div>
     </div>
 
     <footer class="console-footer">
