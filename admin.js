@@ -164,26 +164,21 @@ document.getElementById('btn-event').addEventListener('click', async function ()
 });
 
 // ── Analytics ────────────────────────────────────
-function loadAnalytics() {
+async function loadAnalytics() {
   var body = document.getElementById('anBody');
   if (!body) return;
   body.innerHTML = '<span class="an-loading">Načítám...</span>';
-
-  fetch('/api/analytics')
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      var body2 = document.getElementById('anBody');
-      if (!body2) return;
-      if (!d.ok) {
-        body2.innerHTML = '<span class="an-err">' + (d.error || 'Neznámá chyba') + '</span>';
-        return;
-      }
-      body2.innerHTML = buildAnHTML(d);
-    })
-    .catch(function(e) {
-      var body3 = document.getElementById('anBody');
-      if (body3) body3.innerHTML = '<span class="an-err">Chyba: ' + e.message + '</span>';
-    });
+  try {
+    var r = await fetch('/api/analytics');
+    var d = await r.json();
+    if (!d.ok) {
+      body.innerHTML = '<span class="an-err">' + (d.error || 'Neznámá chyba') + '</span>';
+      return;
+    }
+    body.innerHTML = buildAnHTML(d);
+  } catch (e) {
+    body.innerHTML = '<span class="an-err">Chyba: ' + e.message + '</span>';
+  }
 }
 
 function buildAnHTML(d) {
