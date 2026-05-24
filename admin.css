@@ -751,6 +751,110 @@ html, body {
 }
 .event-save-btn:hover { background: rgba(255,179,0,.08); }
 
+/* ── Analytics panel ────────────────────────────── */
+.analytics-panel {
+  max-width: 860px;
+  margin: 0 auto 32px;
+  padding: 24px 28px 20px;
+  background: var(--panel);
+  border: 1px solid rgba(255,179,0,.18);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+}
+
+.analytics-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.analytics-loading {
+  font-size: .72rem;
+  color: var(--sub);
+  letter-spacing: .1em;
+  padding: 4px 0 12px;
+  animation: blinkText 1.4s infinite;
+}
+
+.analytics-num {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.analytics-num__val {
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--amber);
+  letter-spacing: -.02em;
+}
+
+.analytics-num__lbl {
+  font-size: .65rem;
+  color: var(--sub);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.analytics-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 56px;
+  margin-bottom: 4px;
+}
+
+.analytics-bar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  gap: 4px;
+}
+
+.analytics-bar__fill {
+  width: 100%;
+  background: var(--amber);
+  opacity: .6;
+  border-radius: 2px 2px 0 0;
+  min-height: 2px;
+  transition: height .4s ease;
+}
+
+.analytics-bar__lbl {
+  font-size: .5rem;
+  color: var(--sub);
+  white-space: nowrap;
+}
+
+.analytics-err {
+  font-size: .72rem;
+  color: var(--red);
+  letter-spacing: .06em;
+  padding: 4px 0 12px;
+}
+
+.analytics-cf-btn {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: .65rem;
+  color: var(--sub);
+  text-decoration: none;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid transparent;
+  transition: color .2s, border-color .2s;
+}
+
+.analytics-cf-btn:hover {
+  color: var(--amber);
+  border-bottom-color: var(--amber-dim);
+}
+
 /* ── Responsive ─────────────────────────────────── */
 @media (max-width: 900px) {
   .console-grid { grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 16px; }

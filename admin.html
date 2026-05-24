@@ -135,6 +135,24 @@
       <button class="master-btn master-btn--open"  id="masterOpen">▲ OTEVŘÍT VŠE</button>
     </div>
 
+    <!-- ── Návštěvnost ────────────────────────────── -->
+    <div class="analytics-panel" id="analyticsPanel">
+      <div class="analytics-header">
+        <span class="station-label">NÁVŠTĚVNOST</span>
+        <span class="station-duration">Posledních 7 dní</span>
+      </div>
+      <div class="analytics-loading" id="analyticsLoading">Načítám...</div>
+      <div class="analytics-data" id="analyticsData" hidden>
+        <div class="analytics-num">
+          <span class="analytics-num__val" id="analyticsPageviews">—</span>
+          <span class="analytics-num__lbl">zobrazení stránek</span>
+        </div>
+        <div class="analytics-bars" id="analyticsBars"></div>
+      </div>
+      <div class="analytics-err" id="analyticsErr" hidden></div>
+      <a href="https://dash.cloudflare.com/" target="_blank" rel="noopener" class="analytics-cf-btn">Zobrazit v Cloudflare →</a>
+    </div>
+
     <footer class="console-footer">
       <span>Změny jsou okamžitě živé pro všechny návštěvníky</span>
       <a href="sluzby.html" target="_blank" class="footer-link">Otevřít stránku →</a>

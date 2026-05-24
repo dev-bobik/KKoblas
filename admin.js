@@ -18,6 +18,7 @@ function unlock() {
   consolEl.hidden = false;
   sessionStorage.setItem(SESSION_KEY, '1');
   loadStatus();
+  loadAnalytics();
 }
 
 if (sessionStorage.getItem(SESSION_KEY) === '1') unlock();
@@ -161,6 +162,46 @@ document.getElementById('btn-event').addEventListener('click', async function ()
   renderEvent();
   await saveStatus();
 });
+
+// ── Analytics ────────────────────────────────────
+function loadAnalytics() {
+  var loading = document.getElementById('analyticsLoading');
+  var dataEl  = document.getElementById('analyticsData');
+  var errEl   = document.getElementById('analyticsErr');
+  var pvEl    = document.getElementById('analyticsPageviews');
+  var barsEl  = document.getElementById('analyticsBars');
+
+  loading.hidden = false;
+  dataEl.hidden  = true;
+  errEl.hidden   = true;
+
+  fetch('/api/analytics')
+    .then(function (r) { return r.json(); })
+    .then(function (json) {
+      loading.hidden = true;
+      if (json.error) {
+        errEl.textContent = json.error;
+        errEl.hidden = false;
+        return;
+      }
+      pvEl.textContent = json.pageviews.toLocaleString('cs-CZ');
+      var max = Math.max.apply(null, json.days.map(function (d) { return d.count; })) || 1;
+      barsEl.innerHTML = json.days.map(function (d) {
+        var h   = Math.max(2, Math.round((d.count / max) * 100));
+        var lbl = d.date.slice(5).replace('-', '/');
+        return '<div class="analytics-bar">'
+          + '<div class="analytics-bar__fill" style="height:' + h + '%"></div>'
+          + '<span class="analytics-bar__lbl">' + lbl + '</span>'
+          + '</div>';
+      }).join('');
+      dataEl.hidden = false;
+    })
+    .catch(function (e) {
+      loading.hidden = true;
+      errEl.textContent = 'Chyba: ' + e.message;
+      errEl.hidden = false;
+    });
+}
 
 // ── Event save ───────────────────────────────────
 document.getElementById('eventSave').addEventListener('click', async function () {
