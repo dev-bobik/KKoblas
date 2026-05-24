@@ -182,14 +182,21 @@ function makeBars(data, keyFn, lblFn) {
   }).join('');
 }
 
+function analyticsLog(msg) {
+  var l = gel('analyticsLoading');
+  if (l) l.textContent = msg;
+}
+
 function loadAnalytics() {
-  var l = gel('analyticsLoading'); if (l) l.hidden = false;
+  var l = gel('analyticsLoading'); if (l) { l.hidden = false; l.textContent = 'Načítám...'; }
   var d = gel('analyticsData');    if (d) d.hidden = true;
   var e = gel('analyticsErr');     if (e) e.hidden = true;
 
+  analyticsLog('Krok 1: spouštím fetch...');
   fetch('/api/analytics')
-    .then(function(r) { return r.json(); })
+    .then(function(r) { analyticsLog('Krok 2: status ' + r.status + ', parsuju JSON...'); return r.json(); })
     .then(function(json) {
+      analyticsLog('Krok 3: JSON ok, pv=' + json.pageviews + ', err=' + json.error);
       var l2 = gel('analyticsLoading'); if (l2) l2.hidden = true;
       if (json.error) { analyticsErr(json.error); return; }
 
