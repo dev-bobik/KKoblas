@@ -82,10 +82,10 @@ var serviceMap = {
       } else {
         throw new Error(result.error || 'Server error');
       }
-    } catch (_) {
+    } catch (err) {
       submitBtn.disabled = false;
       submitBtn.textContent = 'ZÁVAZNĚ ODESLAT ŽÁDOST O SLUŽBU';
-      if (errorEl) errorEl.hidden = false;
+      if (errorEl) { errorEl.hidden = false; errorEl.textContent = err.message || 'Chyba odesílání'; }
     }
   });
 })();
