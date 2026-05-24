@@ -170,7 +170,6 @@ function loadAnalytics() {
   var errEl     = document.getElementById('analyticsErr');
   var pvEl      = document.getElementById('analyticsPageviews');
   var todayEl   = document.getElementById('analyticsToday');
-  var barsEl    = document.getElementById('analyticsBars');
   var pagesEl   = document.getElementById('analyticsPages');
   var devicesEl = document.getElementById('analyticsDevices');
 
@@ -191,16 +190,33 @@ function loadAnalytics() {
       pvEl.textContent    = json.pageviews.toLocaleString('cs-CZ');
       todayEl.textContent = json.todayPv.toLocaleString('cs-CZ');
 
-      // sloupcový graf
-      var max = Math.max.apply(null, json.days.map(function (d) { return d.count; })) || 1;
-      barsEl.innerHTML = json.days.map(function (d) {
-        var h   = Math.max(2, Math.round((d.count / max) * 100));
-        var lbl = d.date.slice(5).replace('-', '/');
-        return '<div class="analytics-bar">'
-          + '<div class="analytics-bar__fill" style="height:' + h + '%"></div>'
-          + '<span class="analytics-bar__lbl">' + lbl + '</span>'
-          + '</div>';
-      }).join('');
+      // graf dnes (hodinový)
+      var maxH = Math.max.apply(null, (json.hours || []).map(function (h) { return h.count; })) || 1;
+      var todayBarsEl = document.getElementById('analyticsBarsToday');
+      if (todayBarsEl) {
+        todayBarsEl.innerHTML = (json.hours || []).map(function (h) {
+          var ht  = Math.max(2, Math.round((h.count / maxH) * 100));
+          var lbl = (h.hour % 6 === 0) ? h.hour + 'h' : '';
+          return '<div class="analytics-bar">'
+            + '<div class="analytics-bar__fill" style="height:' + ht + '%"></div>'
+            + '<span class="analytics-bar__lbl">' + lbl + '</span>'
+            + '</div>';
+        }).join('');
+      }
+
+      // graf 7 dní (denní)
+      var max7 = Math.max.apply(null, (json.days || []).map(function (d) { return d.count; })) || 1;
+      var bars7El = document.getElementById('analyticsBars7d');
+      if (bars7El) {
+        bars7El.innerHTML = (json.days || []).map(function (d) {
+          var ht  = Math.max(2, Math.round((d.count / max7) * 100));
+          var lbl = d.date.slice(5).replace('-', '/');
+          return '<div class="analytics-bar">'
+            + '<div class="analytics-bar__fill" style="height:' + ht + '%"></div>'
+            + '<span class="analytics-bar__lbl">' + lbl + '</span>'
+            + '</div>';
+        }).join('');
+      }
 
       // top stránky
       var pageLabels = { '/': 'Úvod', '/sluzby.html': 'Služby', '/omne.html': 'O mně',

@@ -145,20 +145,21 @@
       <div class="analytics-err" id="analyticsErr" hidden></div>
       <div class="analytics-data" id="analyticsData" hidden>
 
-        <!-- čísla -->
-        <div class="analytics-nums">
-          <div class="analytics-num">
-            <span class="analytics-num__val" id="analyticsPageviews">—</span>
-            <span class="analytics-num__lbl">zobrazení za 7 dní</span>
+        <!-- dva grafy -->
+        <div class="analytics-charts">
+          <div class="analytics-chart-block">
+            <div class="analytics-chart-title">
+              DNES — <span id="analyticsToday">—</span> zobrazení
+            </div>
+            <div class="analytics-bars analytics-bars--tall" id="analyticsBarsToday"></div>
           </div>
-          <div class="analytics-num">
-            <span class="analytics-num__val" id="analyticsToday">—</span>
-            <span class="analytics-num__lbl">dnes</span>
+          <div class="analytics-chart-block">
+            <div class="analytics-chart-title">
+              7 DNÍ — <span id="analyticsPageviews">—</span> zobrazení
+            </div>
+            <div class="analytics-bars analytics-bars--tall" id="analyticsBars7d"></div>
           </div>
         </div>
-
-        <!-- graf -->
-        <div class="analytics-bars" id="analyticsBars"></div>
 
         <!-- spodní sekce -->
         <div class="analytics-details">

@@ -838,10 +838,33 @@ html, body {
   padding: 4px 0 12px;
 }
 
-.analytics-nums {
-  display: flex;
-  gap: 40px;
+.analytics-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
   margin-bottom: 20px;
+}
+
+.analytics-chart-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.analytics-chart-title {
+  font-size: .65rem;
+  letter-spacing: .12em;
+  color: var(--sub);
+  text-transform: uppercase;
+}
+
+.analytics-chart-title span {
+  color: var(--amber);
+  font-weight: bold;
+}
+
+.analytics-bars--tall {
+  height: 72px;
 }
 
 .analytics-details {
