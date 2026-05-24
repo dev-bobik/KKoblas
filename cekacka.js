@@ -30,8 +30,7 @@ var WEB3FORMS_KEY = '962ce707-a0c7-4153-890d-415b6051d67a';
       });
 
       if (res.ok) {
-        form.style.display = 'none';
-        if (successEl) successEl.style.display = 'flex';
+        window.location.href = 'index.html';
       } else {
         throw new Error('server error ' + res.status);
       }
