@@ -164,98 +164,68 @@ document.getElementById('btn-event').addEventListener('click', async function ()
 });
 
 // ── Analytics ────────────────────────────────────
-function loadAnalytics() {
-  var loading   = document.getElementById('analyticsLoading');
-  var dataEl    = document.getElementById('analyticsData');
-  var errEl     = document.getElementById('analyticsErr');
-  var pvEl      = document.getElementById('analyticsPageviews');
-  var todayEl   = document.getElementById('analyticsToday');
-  var pagesEl   = document.getElementById('analyticsPages');
-  var devicesEl = document.getElementById('analyticsDevices');
+function gel(id) { return document.getElementById(id); }
 
-  loading.hidden = false;
-  dataEl.hidden  = true;
-  errEl.hidden   = true;
+function analyticsErr(msg) {
+  var e = gel('analyticsErr');     if (e) { e.textContent = msg; e.hidden = false; }
+  var l = gel('analyticsLoading'); if (l) l.hidden = true;
+}
+
+function makeBars(data, keyFn, lblFn) {
+  var max = Math.max.apply(null, data.map(function(d){ return d.count; })) || 1;
+  return data.map(function(d) {
+    var ht = Math.max(2, Math.round((d.count / max) * 100));
+    return '<div class="analytics-bar">'
+      + '<div class="analytics-bar__fill" style="height:' + ht + '%"></div>'
+      + '<span class="analytics-bar__lbl">' + lblFn(d) + '</span>'
+      + '</div>';
+  }).join('');
+}
+
+function loadAnalytics() {
+  var l = gel('analyticsLoading'); if (l) l.hidden = false;
+  var d = gel('analyticsData');    if (d) d.hidden = true;
+  var e = gel('analyticsErr');     if (e) e.hidden = true;
 
   fetch('/api/analytics')
-    .then(function (r) { return r.json(); })
-    .then(function (json) {
-      try {
-      loading.hidden = true;
-      if (json.error) {
-        errEl.textContent = json.error;
-        errEl.hidden = false;
-        return;
-      }
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      var l2 = gel('analyticsLoading'); if (l2) l2.hidden = true;
+      if (json.error) { analyticsErr(json.error); return; }
 
-      if (pvEl)    pvEl.textContent    = (json.pageviews || 0).toLocaleString('cs-CZ');
-      if (todayEl) todayEl.textContent = (json.todayPv   || 0).toLocaleString('cs-CZ');
+      var pv = gel('analyticsPageviews');
+      if (pv) pv.textContent = (json.pageviews || 0).toLocaleString('cs-CZ');
 
-      // graf dnes (hodinový)
-      var maxH = Math.max.apply(null, (json.hours || []).map(function (h) { return h.count; })) || 1;
-      var todayBarsEl = document.getElementById('analyticsBarsToday');
-      if (todayBarsEl) {
-        todayBarsEl.innerHTML = (json.hours || []).map(function (h) {
-          var ht  = Math.max(2, Math.round((h.count / maxH) * 100));
-          var lbl = (h.hour % 6 === 0) ? h.hour + 'h' : '';
-          return '<div class="analytics-bar">'
-            + '<div class="analytics-bar__fill" style="height:' + ht + '%"></div>'
-            + '<span class="analytics-bar__lbl">' + lbl + '</span>'
-            + '</div>';
-        }).join('');
-      }
+      var td = gel('analyticsToday');
+      if (td) td.textContent = (json.todayPv || 0).toLocaleString('cs-CZ');
 
-      // graf 7 dní (denní)
-      var max7 = Math.max.apply(null, (json.days || []).map(function (d) { return d.count; })) || 1;
-      var bars7El = document.getElementById('analyticsBars7d');
-      if (bars7El) {
-        bars7El.innerHTML = (json.days || []).map(function (d) {
-          var ht  = Math.max(2, Math.round((d.count / max7) * 100));
-          var lbl = d.date.slice(5).replace('-', '/');
-          return '<div class="analytics-bar">'
-            + '<div class="analytics-bar__fill" style="height:' + ht + '%"></div>'
-            + '<span class="analytics-bar__lbl">' + lbl + '</span>'
-            + '</div>';
-        }).join('');
-      }
+      var bToday = gel('analyticsBarsToday');
+      if (bToday && json.hours) bToday.innerHTML = makeBars(json.hours, function(h){ return h.hour; }, function(h){ return h.hour % 6 === 0 ? h.hour + 'h' : ''; });
 
-      // top stránky
-      if (pagesEl) {
-        var pageLabels = { '/': 'Úvod', '/sluzby.html': 'Služby', '/omne.html': 'O mně',
-          '/jakpracuji.html': 'Jak pracuji', '/faq.html': 'FAQ', '/kontakt.html': 'Kontakt',
-          '/objednavka.html': 'Objednávka', '/dekujeme.html': 'Děkujeme' };
-        pagesEl.innerHTML = (json.topPages || []).map(function (p) {
-          var lbl = pageLabels[p.path] || p.path;
-          return '<li class="analytics-page-row">'
-            + '<span class="analytics-page-name">' + lbl + '</span>'
-            + '<span class="analytics-page-count">' + p.count + '</span>'
-            + '</li>';
+      var b7 = gel('analyticsBars7d');
+      if (b7 && json.days) b7.innerHTML = makeBars(json.days, function(d){ return d.date; }, function(d){ return d.date.slice(5).replace('-','/'); });
+
+      var pg = gel('analyticsPages');
+      if (pg) {
+        var pageLabels = {'/':'Úvod','/sluzby.html':'Služby','/omne.html':'O mně',
+          '/jakpracuji.html':'Jak pracuji','/faq.html':'FAQ','/kontakt.html':'Kontakt',
+          '/objednavka.html':'Objednávka','/dekujeme.html':'Děkujeme'};
+        pg.innerHTML = (json.topPages||[]).map(function(p){
+          return '<li class="analytics-page-row"><span class="analytics-page-name">'+(pageLabels[p.path]||p.path)+'</span><span class="analytics-page-count">'+p.count+'</span></li>';
         }).join('') || '<li class="analytics-page-row"><span class="analytics-page-name" style="color:var(--sub)">žádná data</span></li>';
       }
 
-      // zařízení
-      if (devicesEl) {
-        var deviceLabels = { 'Desktop': 'Desktop', 'Mobile': 'Mobil', 'Tablet': 'Tablet', 'Bot': 'Bot' };
-        devicesEl.innerHTML = (json.devices || []).map(function (d) {
-          var lbl = deviceLabels[d.type] || d.type;
-          return '<li class="analytics-device-row">'
-            + '<span class="analytics-device-name">' + lbl + '</span>'
-            + '<span class="analytics-device-bar"><span class="analytics-device-fill" style="width:' + d.pct + '%"></span></span>'
-            + '<span class="analytics-device-pct">' + d.pct + '%</span>'
-            + '</li>';
+      var dv = gel('analyticsDevices');
+      if (dv) {
+        var dlbl = {'Desktop':'Desktop','Mobile':'Mobil','Tablet':'Tablet','Bot':'Bot'};
+        dv.innerHTML = (json.devices||[]).map(function(d){
+          return '<li class="analytics-device-row"><span class="analytics-device-name">'+(dlbl[d.type]||d.type)+'</span><span class="analytics-device-bar"><span class="analytics-device-fill" style="width:'+d.pct+'%"></span></span><span class="analytics-device-pct">'+d.pct+'%</span></li>';
         }).join('') || '<li class="analytics-device-row"><span class="analytics-device-name" style="color:var(--sub)">žádná data</span></li>';
       }
 
-      if (dataEl) dataEl.hidden = false;
-      } catch (innerErr) {
-        errEl.textContent = 'Chyba [' + innerErr.message + ']';
-        errEl.hidden = false;
-      }
+      var da = gel('analyticsData'); if (da) da.hidden = false;
     })
-    .catch(function (e) {
-      if (loading) loading.hidden = true;
-      if (errEl) { errEl.textContent = 'Chyba: ' + e.message; errEl.hidden = false; }
-    });
+    .catch(function(e) { analyticsErr('Chyba: ' + e.message); });
 }
 
 // ── Event save ───────────────────────────────────
