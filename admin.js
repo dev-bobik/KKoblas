@@ -180,6 +180,7 @@ function loadAnalytics() {
   fetch('/api/analytics')
     .then(function (r) { return r.json(); })
     .then(function (json) {
+      try {
       loading.hidden = true;
       if (json.error) {
         errEl.textContent = json.error;
@@ -187,8 +188,8 @@ function loadAnalytics() {
         return;
       }
 
-      pvEl.textContent    = json.pageviews.toLocaleString('cs-CZ');
-      todayEl.textContent = json.todayPv.toLocaleString('cs-CZ');
+      if (pvEl)    pvEl.textContent    = (json.pageviews || 0).toLocaleString('cs-CZ');
+      if (todayEl) todayEl.textContent = (json.todayPv   || 0).toLocaleString('cs-CZ');
 
       // graf dnes (hodinový)
       var maxH = Math.max.apply(null, (json.hours || []).map(function (h) { return h.count; })) || 1;
@@ -245,12 +246,15 @@ function loadAnalytics() {
         }).join('') || '<li class="analytics-device-row"><span class="analytics-device-name" style="color:var(--sub)">žádná data</span></li>';
       }
 
-      dataEl.hidden = false;
+      if (dataEl) dataEl.hidden = false;
+      } catch (innerErr) {
+        errEl.textContent = 'Chyba [' + innerErr.message + ']';
+        errEl.hidden = false;
+      }
     })
     .catch(function (e) {
-      loading.hidden = true;
-      errEl.textContent = 'Chyba: ' + e.message;
-      errEl.hidden = false;
+      if (loading) loading.hidden = true;
+      if (errEl) { errEl.textContent = 'Chyba: ' + e.message; errEl.hidden = false; }
     });
 }
 
