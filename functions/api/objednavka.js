@@ -23,7 +23,7 @@ export async function onRequestPost(context) {
 
     const RESEND_KEY   = context.env.RESEND_API_KEY;
     const FROM_DOMAIN  = context.env.FROM_DOMAIN || 'onboarding@resend.dev';
-    const OWNER_EMAIL  = 'koblas.nutricni.info@gmail.com';
+    const OWNER_EMAIL  = 'robin.petr523@gmail.com';
 
     // Email pro Kryštofa — přehled objednávky
     const htmlOwner = `
