@@ -27,20 +27,41 @@
     if (!stage) return;
     var items = Array.from(stage.querySelectorAll('.food-slider__item'));
     if (items.length < 2) return;
-    var current = 0;
-    items[0].classList.add('is-active');
+
+    var cur  = 0;
+    var prev = items.length - 1;
+    var next = 1 % items.length;
+
+    items[cur].classList.add('is-active');
+    items[prev].classList.add('is-prev');
+    items[next].classList.add('is-next');
+
     setInterval(function () {
-      var leaving = current;
-      current = (current + 1) % items.length;
-      items[leaving].classList.add('is-leaving');
-      items[leaving].classList.remove('is-active');
-      items[current].classList.add('is-active');
+      var oldPrev = prev;
+      prev = cur;
+      cur  = next;
+      next = (cur + 1) % items.length;
+
+      // old-prev animuje doleva ven, pak se potichu přesune doprava
+      items[oldPrev].classList.remove('is-prev');
+      items[oldPrev].classList.add('is-exiting');
       setTimeout(function () {
-        items[leaving].style.transition = 'none';
-        items[leaving].classList.remove('is-leaving');
-        items[leaving].offsetHeight;
-        items[leaving].style.transition = '';
+        items[oldPrev].style.transition = 'none';
+        items[oldPrev].classList.remove('is-exiting');
+        items[oldPrev].offsetHeight;
+        items[oldPrev].style.transition = '';
       }, 750);
+
+      // aktivní → levý peek
+      items[prev].classList.remove('is-active');
+      items[prev].classList.add('is-prev');
+
+      // pravý peek → aktivní
+      items[cur].classList.remove('is-next');
+      items[cur].classList.add('is-active');
+
+      // připrav nový pravý peek
+      items[next].classList.add('is-next');
     }, 4000);
   })();
 

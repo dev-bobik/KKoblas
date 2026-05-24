@@ -375,33 +375,73 @@
 
 /* ── Food photo slider ──────────────────────────── */
 .food-slider {
-  background: var(--cream);
-  padding: 40px 60px;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 50%, rgba(36,82,68,.55) 0%, transparent 68%),
+    var(--surface);
+  padding: 60px 0 80px;
+}
+
+.food-slider::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='80'%3E%3Cg fill='none' stroke='%234dae8c' stroke-linecap='round'%3E%3Cpath d='M0,12 C40,1 120,23 160,12' stroke-width='0.9' opacity='0.08'/%3E%3Cpath d='M0,38 C40,31 120,45 160,38' stroke-width='0.7' opacity='0.05'/%3E%3Cpath d='M0,62 C40,52 120,72 160,62' stroke-width='0.9' opacity='0.08'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 160px 80px;
+}
+
+/* edge + bottom fade overlay */
+.food-slider::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    linear-gradient(to right,
+      var(--surface) 0%,
+      transparent 6%,
+      transparent 94%,
+      var(--surface) 100%
+    ),
+    linear-gradient(to bottom,
+      transparent 55%,
+      var(--surface) 100%
+    );
 }
 
 .food-slider__stage {
   position: relative;
-  overflow: hidden;
-  border-radius: 12px;
+  z-index: 2;
   height: 420px;
-  max-width: 640px;
+  max-width: 860px;
   margin: 0 auto;
-  border: 2px solid rgba(201,168,76,.7);
-  box-shadow: 0 0 0 4px rgba(201,168,76,.1), 0 6px 28px rgba(0,0,0,.28);
 }
 
 .food-slider__item {
   position: absolute;
-  inset: 0;
+  top: 0; bottom: 0;
+  left: 52px; right: 52px;
+  border-radius: 12px;
+  background-color: #0a1410;
   background-size: cover;
   background-position: center;
   filter: brightness(.82) saturate(.92);
-  transform: translateX(100%);
+  border: 2px solid rgba(201,168,76,.7);
+  box-shadow: 0 0 0 4px rgba(201,168,76,.1), 0 6px 28px rgba(0,0,0,.35);
+  transform: translateX(calc(200% + 200px)); /* výchozí: daleko vpravo, skrytý */
   transition: transform .7s cubic-bezier(.4,0,.2,1);
+  z-index: 0;
 }
 
-.food-slider__item.is-active  { transform: translateX(0); }
-.food-slider__item.is-leaving { transform: translateX(-100%); }
+.food-slider__item.is-next    { transform: translateX(calc(100% + 112px)); z-index: 1; }
+.food-slider__item.is-active  { transform: translateX(0);                  z-index: 2; }
+.food-slider__item.is-prev    { transform: translateX(calc(-100% - 112px)); z-index: 1; }
+.food-slider__item.is-exiting { transform: translateX(calc(-200% - 224px)); z-index: 0; }
 
 .food-slider .fs--1 { background-image: url('jidlo.webp'); }
 .food-slider .fs--2 { background-image: url("fotky pro záložku služby-20260510T210935Z-3-001/fotky pro záložku služby/P_20260327_143342.webp"); }
@@ -872,8 +912,8 @@
 
   .info-blocks__inner { grid-template-columns: 1fr; max-width: 520px; }
 
-  .food-slider { padding: 28px 32px; }
-  .food-slider__stage { height: 240px; }
+  .food-slider { padding: 40px 0 60px; }
+  .food-slider__stage { height: 280px; }
 
   .wl-row--3 { grid-template-columns: 1fr; }
 }
@@ -882,8 +922,9 @@
   .page-hero { padding: 72px 20px 56px; }
   .pkg-card { padding: 28px 20px 24px; }
   .info-card { padding: 28px 20px; }
-  .food-slider { padding: 20px; }
-  .food-slider__stage { height: 180px; }
+  .food-slider { padding: 28px 0 48px; }
+  .food-slider__stage { height: 200px; }
+  .food-slider__item { left: 28px; right: 28px; }
   .wl-services { flex-direction: column; gap: 12px; }
 }
 
