@@ -10,7 +10,7 @@ var lockError  = document.getElementById('lockError');
 var deployBar  = document.getElementById('deployBar');
 var deployMsg  = document.getElementById('deployMsg');
 
-var currentStatus = { startup: 'volny', mentoring: 'volny', ultimate: 'volny' };
+var currentStatus = { startup: 'volny', mentoring: 'volny', ultimate: 'volny', event: { active: false, name: '', popis: '', odkaz: '' } };
 
 // ── Auth ─────────────────────────────────────────
 function unlock() {
@@ -102,7 +102,29 @@ function renderStation(sluzba) {
   if (btnLabel)  btnLabel.textContent  = isOpen ? 'UZAVŘÍT' : 'OTEVŘÍT';
 }
 
-function renderAll() { SERVICES.forEach(renderStation); }
+function renderAll() {
+  SERVICES.forEach(renderStation);
+  renderEvent();
+}
+
+function renderEvent() {
+  var ev      = currentStatus.event || {};
+  var isActive = ev.active === true;
+  var led     = document.getElementById('led-event');
+  var txt     = document.getElementById('statusText-event');
+  var lbl     = document.getElementById('btnLabel-event');
+  var panel   = document.getElementById('eventPanel');
+  if (led)   led.className   = 'status-led ' + (isActive ? 'volny' : '');
+  if (txt)   txt.textContent = isActive ? 'AKTIVNÍ' : 'NEAKTIVNÍ';
+  if (lbl)   lbl.textContent = isActive ? 'DEAKTIVOVAT' : 'AKTIVOVAT';
+  if (panel) panel.classList.toggle('event-panel--active', isActive);
+  var nameEl  = document.getElementById('eventName');
+  var opisEl  = document.getElementById('eventPopis');
+  var odkazEl = document.getElementById('eventOdkaz');
+  if (nameEl)  nameEl.value  = ev.name  || '';
+  if (opisEl)  opisEl.value  = ev.popis || '';
+  if (odkazEl) odkazEl.value = ev.odkaz || '';
+}
 
 // ── Toggle ───────────────────────────────────────
 async function toggle(sluzba) {
@@ -131,3 +153,22 @@ async function setAll(val) {
 
 document.getElementById('masterClose').addEventListener('click', function () { setAll('uzavreny'); });
 document.getElementById('masterOpen').addEventListener('click',  function () { setAll('volny'); });
+
+// ── Event toggle ─────────────────────────────────
+document.getElementById('btn-event').addEventListener('click', async function () {
+  var ev = currentStatus.event || {};
+  currentStatus.event = Object.assign({}, ev, { active: !ev.active });
+  renderEvent();
+  await saveStatus();
+});
+
+// ── Event save ───────────────────────────────────
+document.getElementById('eventSave').addEventListener('click', async function () {
+  currentStatus.event = {
+    active: (currentStatus.event || {}).active === true,
+    name:   document.getElementById('eventName').value.trim(),
+    popis:  document.getElementById('eventPopis').value.trim(),
+    odkaz:  document.getElementById('eventOdkaz').value.trim()
+  };
+  await saveStatus();
+});

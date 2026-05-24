@@ -8,6 +8,27 @@
       if (!card) return;
       card.classList.toggle('plno', status === 'uzavreny');
     });
+    applyEvent(data && data.event);
+  }
+
+  function applyEvent(ev) {
+    var banner  = document.getElementById('eventBanner');
+    if (!banner) return;
+    if (!ev || !ev.active) { banner.hidden = true; return; }
+    banner.hidden = false;
+    var nameEl  = document.getElementById('eventBannerName');
+    var opisEl  = document.getElementById('eventBannerPopis');
+    var odkazEl = document.getElementById('eventBannerOdkaz');
+    if (nameEl)  nameEl.textContent  = ev.name  || '';
+    if (opisEl)  opisEl.textContent  = ev.popis || '';
+    if (odkazEl) {
+      if (ev.odkaz) {
+        odkazEl.href   = ev.odkaz;
+        odkazEl.hidden = false;
+      } else {
+        odkazEl.hidden = true;
+      }
+    }
   }
 
   fetch('/api/status')

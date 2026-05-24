@@ -1,4 +1,4 @@
-const DEFAULT = { startup: 'volny', mentoring: 'volny', ultimate: 'volny' };
+const DEFAULT = { startup: 'volny', mentoring: 'volny', ultimate: 'volny', event: { active: false, name: '', popis: '', odkaz: '' } };
 
 export async function onRequestGet(context) {
   try {
@@ -25,7 +25,13 @@ export async function onRequestPost(context) {
     const status = {
       startup:   allowed.includes(body.startup)   ? body.startup   : 'volny',
       mentoring: allowed.includes(body.mentoring) ? body.mentoring : 'volny',
-      ultimate:  allowed.includes(body.ultimate)  ? body.ultimate  : 'volny'
+      ultimate:  allowed.includes(body.ultimate)  ? body.ultimate  : 'volny',
+      event: {
+        active: body.event?.active === true,
+        name:   (body.event?.name  || '').slice(0, 120),
+        popis:  (body.event?.popis || '').slice(0, 500),
+        odkaz:  (body.event?.odkaz || '').slice(0, 300)
+      }
     };
     await context.env.STATUS_STORE.put('status', JSON.stringify(status));
     return new Response(JSON.stringify({ ok: true, status }), {

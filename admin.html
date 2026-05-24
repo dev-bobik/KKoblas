@@ -97,6 +97,39 @@
 
     </main>
 
+    <!-- ── Speciální event ──────────────────────── -->
+    <div class="event-panel" id="eventPanel">
+      <div class="event-panel__header">
+        <div class="event-panel__title">
+          <span class="station-label">SPECIÁLNÍ EVENT</span>
+          <span class="station-duration">Zobrazí se na stránce Služby</span>
+        </div>
+        <div class="status-display">
+          <span class="status-led" id="led-event"></span>
+          <span class="status-text" id="statusText-event">NEAKTIVNÍ</span>
+        </div>
+        <div class="btn-mount">
+          <div class="btn-ring">
+            <button class="launch-btn" id="btn-event">
+              <span class="launch-btn__label" id="btnLabel-event">AKTIVOVAT</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="event-panel__fields">
+        <label class="event-label">Název eventu
+          <input type="text" id="eventName" class="event-input" placeholder="např. Workshop – Výživa pro sport" maxlength="120">
+        </label>
+        <label class="event-label">Popisek
+          <textarea id="eventPopis" class="event-input event-textarea" placeholder="Krátký popis eventu..." maxlength="500"></textarea>
+        </label>
+        <label class="event-label">Odkaz (volitelné)
+          <input type="url" id="eventOdkaz" class="event-input" placeholder="https://...">
+        </label>
+        <button class="event-save-btn" id="eventSave">💾 ULOŽIT EVENT</button>
+      </div>
+    </div>
+
     <div class="master-controls">
       <button class="master-btn master-btn--close" id="masterClose">▼ UZAVŘÍT VŠE</button>
       <button class="master-btn master-btn--open"  id="masterOpen">▲ OTEVŘÍT VŠE</button>
