@@ -165,11 +165,14 @@ document.getElementById('btn-event').addEventListener('click', async function ()
 
 // ── Analytics ────────────────────────────────────
 function loadAnalytics() {
-  var loading = document.getElementById('analyticsLoading');
-  var dataEl  = document.getElementById('analyticsData');
-  var errEl   = document.getElementById('analyticsErr');
-  var pvEl    = document.getElementById('analyticsPageviews');
-  var barsEl  = document.getElementById('analyticsBars');
+  var loading   = document.getElementById('analyticsLoading');
+  var dataEl    = document.getElementById('analyticsData');
+  var errEl     = document.getElementById('analyticsErr');
+  var pvEl      = document.getElementById('analyticsPageviews');
+  var todayEl   = document.getElementById('analyticsToday');
+  var barsEl    = document.getElementById('analyticsBars');
+  var pagesEl   = document.getElementById('analyticsPages');
+  var devicesEl = document.getElementById('analyticsDevices');
 
   loading.hidden = false;
   dataEl.hidden  = true;
@@ -184,7 +187,11 @@ function loadAnalytics() {
         errEl.hidden = false;
         return;
       }
-      pvEl.textContent = json.pageviews.toLocaleString('cs-CZ');
+
+      pvEl.textContent    = json.pageviews.toLocaleString('cs-CZ');
+      todayEl.textContent = json.todayPv.toLocaleString('cs-CZ');
+
+      // sloupcový graf
       var max = Math.max.apply(null, json.days.map(function (d) { return d.count; })) || 1;
       barsEl.innerHTML = json.days.map(function (d) {
         var h   = Math.max(2, Math.round((d.count / max) * 100));
@@ -194,6 +201,30 @@ function loadAnalytics() {
           + '<span class="analytics-bar__lbl">' + lbl + '</span>'
           + '</div>';
       }).join('');
+
+      // top stránky
+      var pageLabels = { '/': 'Úvod', '/sluzby.html': 'Služby', '/omne.html': 'O mně',
+        '/jakpracuji.html': 'Jak pracuji', '/faq.html': 'FAQ', '/kontakt.html': 'Kontakt',
+        '/objednavka.html': 'Objednávka', '/dekujeme.html': 'Děkujeme' };
+      pagesEl.innerHTML = (json.topPages || []).map(function (p) {
+        var lbl = pageLabels[p.path] || p.path;
+        return '<li class="analytics-page-row">'
+          + '<span class="analytics-page-name">' + lbl + '</span>'
+          + '<span class="analytics-page-count">' + p.count + '</span>'
+          + '</li>';
+      }).join('') || '<li class="analytics-page-row"><span class="analytics-page-name" style="color:var(--sub)">žádná data</span></li>';
+
+      // zařízení
+      var deviceLabels = { 'Desktop': 'Desktop', 'Mobile': 'Mobil', 'Tablet': 'Tablet', 'Bot': 'Bot' };
+      devicesEl.innerHTML = (json.devices || []).map(function (d) {
+        var lbl = deviceLabels[d.type] || d.type;
+        return '<li class="analytics-device-row">'
+          + '<span class="analytics-device-name">' + lbl + '</span>'
+          + '<span class="analytics-device-bar"><span class="analytics-device-fill" style="width:' + d.pct + '%"></span></span>'
+          + '<span class="analytics-device-pct">' + d.pct + '%</span>'
+          + '</li>';
+      }).join('') || '<li class="analytics-device-row"><span class="analytics-device-name" style="color:var(--sub)">žádná data</span></li>';
+
       dataEl.hidden = false;
     })
     .catch(function (e) {

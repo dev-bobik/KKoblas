@@ -142,15 +142,41 @@
         <span class="station-duration">Posledních 7 dní</span>
       </div>
       <div class="analytics-loading" id="analyticsLoading">Načítám...</div>
-      <div class="analytics-data" id="analyticsData" hidden>
-        <div class="analytics-num">
-          <span class="analytics-num__val" id="analyticsPageviews">—</span>
-          <span class="analytics-num__lbl">zobrazení stránek</span>
-        </div>
-        <div class="analytics-bars" id="analyticsBars"></div>
-      </div>
       <div class="analytics-err" id="analyticsErr" hidden></div>
-      <a href="https://dash.cloudflare.com/" target="_blank" rel="noopener" class="analytics-cf-btn">Zobrazit v Cloudflare →</a>
+      <div class="analytics-data" id="analyticsData" hidden>
+
+        <!-- čísla -->
+        <div class="analytics-nums">
+          <div class="analytics-num">
+            <span class="analytics-num__val" id="analyticsPageviews">—</span>
+            <span class="analytics-num__lbl">zobrazení za 7 dní</span>
+          </div>
+          <div class="analytics-num">
+            <span class="analytics-num__val" id="analyticsToday">—</span>
+            <span class="analytics-num__lbl">dnes</span>
+          </div>
+        </div>
+
+        <!-- graf -->
+        <div class="analytics-bars" id="analyticsBars"></div>
+
+        <!-- spodní sekce -->
+        <div class="analytics-details">
+
+          <!-- top stránky -->
+          <div class="analytics-block">
+            <div class="analytics-block__title">TOP STRÁNKY</div>
+            <ul class="analytics-pages" id="analyticsPages"></ul>
+          </div>
+
+          <!-- zařízení -->
+          <div class="analytics-block">
+            <div class="analytics-block__title">ZAŘÍZENÍ</div>
+            <ul class="analytics-devices" id="analyticsDevices"></ul>
+          </div>
+
+        </div>
+      </div>
     </div>
 
     <footer class="console-footer">

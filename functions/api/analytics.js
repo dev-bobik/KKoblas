@@ -11,24 +11,41 @@ export async function onRequestGet(context) {
   const fmt = d => d.toISOString().split('T')[0];
   const end   = new Date();
   const start = new Date(end.getTime() - 6 * 24 * 60 * 60 * 1000);
+  const filterBase = `AND: [
+    {date_geq: "${fmt(start)}"},
+    {date_leq: "${fmt(end)}"},
+    {siteTag: "${SITE_TAG}"}
+  ]`;
 
   const query = `{
     viewer {
       accounts(filter: {accountTag: "${accountId}"}) {
-        rumPageloadEventsAdaptiveGroups(
-          filter: {
-            AND: [
-              {date_geq: "${fmt(start)}"},
-              {date_leq: "${fmt(end)}"},
-              {siteTag: "${SITE_TAG}"}
-            ]
-          }
+        byDate: rumPageloadEventsAdaptiveGroups(
+          filter: { ${filterBase} }
           limit: 5000
           orderBy: [date_ASC]
         ) {
           count
           avg { sampleInterval }
           dimensions { date }
+        }
+        byPath: rumPageloadEventsAdaptiveGroups(
+          filter: { ${filterBase} }
+          limit: 10
+          orderBy: [count_DESC]
+        ) {
+          count
+          avg { sampleInterval }
+          dimensions { requestPath }
+        }
+        byDevice: rumPageloadEventsAdaptiveGroups(
+          filter: { ${filterBase} }
+          limit: 10
+          orderBy: [count_DESC]
+        ) {
+          count
+          avg { sampleInterval }
+          dimensions { deviceType }
         }
       }
     }
@@ -55,24 +72,50 @@ export async function onRequestGet(context) {
     return Response.json({ error: 'Cloudflare API: ' + msg }, { status: 502 });
   }
 
-  const groups = json.data?.viewer?.accounts?.[0]?.rumPageloadEventsAdaptiveGroups || [];
+  const acc = json.data?.viewer?.accounts?.[0] || {};
 
+  // --- by date ---
+  const byDateGroups = acc.byDate || [];
   const byDate = {};
   let totalPv = 0;
-
-  for (const g of groups) {
+  for (const g of byDateGroups) {
     const est = Math.round(g.count * (g.avg?.sampleInterval || 1));
     totalPv += est;
     const d = g.dimensions?.date;
     if (d) byDate[d] = (byDate[d] || 0) + est;
   }
-
   const days = [];
   for (let i = 0; i <= 6; i++) {
     const d = new Date(start.getTime() + i * 24 * 60 * 60 * 1000);
     const ds = fmt(d);
     days.push({ date: ds, count: byDate[ds] || 0 });
   }
+  const todayStr = fmt(end);
+  const todayPv  = byDate[todayStr] || 0;
 
-  return Response.json({ pageviews: totalPv, days });
+  // --- by path ---
+  const pathMap = {};
+  for (const g of (acc.byPath || [])) {
+    const est  = Math.round(g.count * (g.avg?.sampleInterval || 1));
+    const path = g.dimensions?.requestPath || '/';
+    pathMap[path] = (pathMap[path] || 0) + est;
+  }
+  const topPages = Object.entries(pathMap)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([path, count]) => ({ path, count }));
+
+  // --- by device ---
+  const deviceMap = {};
+  for (const g of (acc.byDevice || [])) {
+    const est    = Math.round(g.count * (g.avg?.sampleInterval || 1));
+    const device = g.dimensions?.deviceType || 'Unknown';
+    deviceMap[device] = (deviceMap[device] || 0) + est;
+  }
+  const deviceTotal = Object.values(deviceMap).reduce((a, b) => a + b, 0) || 1;
+  const devices = Object.entries(deviceMap)
+    .sort((a, b) => b[1] - a[1])
+    .map(([type, count]) => ({ type, count, pct: Math.round(count / deviceTotal * 100) }));
+
+  return Response.json({ pageviews: totalPv, todayPv, days, topPages, devices });
 }
