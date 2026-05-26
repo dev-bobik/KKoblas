@@ -1,26 +1,45 @@
 const SITE_TAG = '4e27e2346fde40e68f3f03fac3e2c036';
 const GQL_URL  = 'https://api.cloudflare.com/client/v4/graphql';
+const CF_API   = 'https://api.cloudflare.com/client/v4';
 
 function fmt(d) { return d.toISOString().split('T')[0]; }
 function est(g)  { return Math.round(g.count * ((g.avg && g.avg.sampleInterval) || 1)); }
 
-async function gqlRaw(token, body) {
-  const r = await fetch(GQL_URL, {
-    method: 'POST',
-    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query: body })
-  });
-  if (!r.ok) throw new Error('HTTP ' + r.status + ' – neplatný token nebo oprávnění');
-  const j = await r.json();
-  if (j.errors && j.errors.length) throw new Error(j.errors[0].message);
-  return j;
+function cfHeaders(token) {
+  return { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
 }
 
-async function gql(token, accountId, body) {
-  const j = await gqlRaw(token, body);
-  const accounts = j.data && j.data.viewer && j.data.viewer.accounts;
-  if (!accounts || accounts.length === 0) return { _accountFound: false };
-  return Object.assign({ _accountFound: true }, accounts[0]);
+// Najde zone ID domény koblas-nutricni.cz přes REST API
+async function findZoneId(token, accountId) {
+  const r = await fetch(`${CF_API}/zones?account.id=${accountId}&per_page=50&status=active`, {
+    headers: cfHeaders(token)
+  });
+  if (!r.ok) return null;
+  const j = await r.json();
+  const zones = j.result || [];
+  // Preferuj hlavní doménu, jinak první zónu
+  const main = zones.find(z => z.name === 'koblas-nutricni.cz') || zones[0];
+  return main ? main.id : null;
+}
+
+// GraphQL dotaz — nejdřív zkus zones, pak accounts jako fallback
+async function gqlQuery(token, tag, tagType, gqlBody) {
+  const r = await fetch(GQL_URL, {
+    method: 'POST',
+    headers: cfHeaders(token),
+    body: JSON.stringify({ query: gqlBody })
+  });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const j = await r.json();
+  if (j.errors && j.errors.length) throw new Error(j.errors[0].message);
+
+  const src = j.data && j.data.viewer;
+  if (!src) return null;
+
+  const arr = tagType === 'zone'
+    ? (src.zones    && src.zones[0])
+    : (src.accounts && src.accounts[0]);
+  return arr || null;
 }
 
 export async function onRequestGet(context) {
@@ -40,85 +59,82 @@ export async function onRequestGet(context) {
   const today  = fmt(now);
   const start7 = fmt(new Date(now.getTime() - 6 * 86400000));
 
-  // Zkusíme tři varianty filtru — bez siteTag, se siteTag, s token
-  const filters = {
-    noTag:   `AND:[{date_geq:"${start7}"},{date_leq:"${today}"}]`,
-    siteTag: `AND:[{date_geq:"${start7}"},{date_leq:"${today}"},{siteTag:"${SITE_TAG}"}]`,
-    token:   `AND:[{date_geq:"${start7}"},{date_leq:"${today}"},{token:"${SITE_TAG}"}]`,
-  };
+  // Najdi zónu
+  const zoneId = await findZoneId(token, accountId);
 
-  // ── Debug mode: vrátí raw počty ze všech tří variant ──────────────
   if (debug) {
-    const results = {};
-    for (const [key, f] of Object.entries(filters)) {
+    // Debug: porovnej zone vs account dotazy
+    const results = { zoneId, accountId, siteTag: SITE_TAG };
+
+    for (const [label, q] of [
+      ['zone_noFilter',   zoneId ? `{viewer{zones(filter:{zoneTag:"${zoneId}"}){rumPageloadEventsAdaptiveGroups(filter:{AND:[{date_geq:"${start7}"},{date_leq:"${today}"}]} limit:5){count avg{sampleInterval}dimensions{date}}}}}` : null],
+      ['zone_siteTag',    zoneId ? `{viewer{zones(filter:{zoneTag:"${zoneId}"}){rumPageloadEventsAdaptiveGroups(filter:{AND:[{date_geq:"${start7}"},{date_leq:"${today}"},{siteTag:"${SITE_TAG}"}]} limit:5){count avg{sampleInterval}dimensions{date}}}}}` : null],
+      ['account_noFilter',`{viewer{accounts(filter:{accountTag:"${accountId}"}){rumPageloadEventsAdaptiveGroups(filter:{AND:[{date_geq:"${start7}"},{date_leq:"${today}"}]} limit:5){count avg{sampleInterval}dimensions{date}}}}}`],
+      ['account_siteTag', `{viewer{accounts(filter:{accountTag:"${accountId}"}){rumPageloadEventsAdaptiveGroups(filter:{AND:[{date_geq:"${start7}"},{date_leq:"${today}"},{siteTag:"${SITE_TAG}"}]} limit:5){count avg{sampleInterval}dimensions{date}}}}}`],
+    ]) {
+      if (!q) { results[label] = 'skip (no zoneId)'; continue; }
       try {
-        const r = await gql(token, accountId,
-          `{viewer{accounts(filter:{accountTag:"${accountId}"}){rumPageloadEventsAdaptiveGroups(filter:{${f}} limit:10){count avg{sampleInterval}dimensions{date}}}}}`
-        );
-        results[key] = {
-          accountFound: r._accountFound,
-          groups: (r.rumPageloadEventsAdaptiveGroups || []).length,
-          total:  (r.rumPageloadEventsAdaptiveGroups || []).reduce((s, g) => s + est(g), 0),
-          raw:    (r.rumPageloadEventsAdaptiveGroups || []).slice(0, 3)
+        const tagType = label.startsWith('zone') ? 'zone' : 'account';
+        const tag     = tagType === 'zone' ? zoneId : accountId;
+        const r = await gqlQuery(token, tag, tagType, q);
+        const groups = r ? (r.rumPageloadEventsAdaptiveGroups || []) : [];
+        results[label] = {
+          groups: groups.length,
+          total:  groups.reduce((s, g) => s + est(g), 0),
+          sample: groups.slice(0, 2)
         };
       } catch (e) {
-        results[key] = { error: e.message };
+        results[label] = { error: e.message };
       }
     }
-    return Response.json({ ok: true, debug: true, results, accountId, siteTag: SITE_TAG });
+    return Response.json({ ok: true, debug: true, results });
   }
 
-  // ── Normální mode: zkus siteTag, pak token, pak bez filtru ────────
-  const f7variants = [filters.siteTag, filters.token, filters.noTag];
-  const fTodayVariants = [
-    `AND:[{datetime_geq:"${today}T00:00:00Z"},{datetime_leq:"${today}T23:59:59Z"},{siteTag:"${SITE_TAG}"}]`,
-    `AND:[{datetime_geq:"${today}T00:00:00Z"},{datetime_leq:"${today}T23:59:59Z"},{token:"${SITE_TAG}"}]`,
-    `AND:[{datetime_geq:"${today}T00:00:00Z"},{datetime_leq:"${today}T23:59:59Z"}]`,
-  ];
+  // ── Normální mode ─────────────────────────────────────────────────
+  const f7 = `AND:[{date_geq:"${start7}"},{date_leq:"${today}"}]`;
+  const fToday = `AND:[{datetime_geq:"${today}T00:00:00Z"},{datetime_leq:"${today}T23:59:59Z"}]`;
+
+  // Sestaví dotazy pro zónu nebo účet
+  function makeQueries(tagType, tagVal) {
+    const src = tagType === 'zone'
+      ? `zones(filter:{zoneTag:"${tagVal}"})`
+      : `accounts(filter:{accountTag:"${tagVal}"})`;
+    return {
+      d7:  `{viewer{${src}{rumPageloadEventsAdaptiveGroups(filter:{${f7}} limit:500 orderBy:[date_ASC]){count avg{sampleInterval}dimensions{date}}}}}`,
+      h:   `{viewer{${src}{rumPageloadEventsAdaptiveGroups(filter:{${fToday}} limit:100 orderBy:[datetimeHour_ASC]){count avg{sampleInterval}dimensions{datetimeHour}}}}}`,
+      p:   `{viewer{${src}{rumPageloadEventsAdaptiveGroups(filter:{${f7}} limit:50){count avg{sampleInterval}dimensions{requestPath}}}}}`,
+      dev: `{viewer{${src}{rumPageloadEventsAdaptiveGroups(filter:{${f7}} limit:10){count avg{sampleInterval}dimensions{deviceType}}}}}`,
+    };
+  }
 
   try {
-    let r7d, rH, rP, rD, usedFilter = 'unknown';
+    // Zkus nejdřív zone, pak account
+    const attempts = [];
+    if (zoneId) attempts.push({ tagType: 'zone',    tagVal: zoneId });
+    attempts.push(             { tagType: 'account', tagVal: accountId });
 
-    // Najdi variantu filtru která vrátí data
-    for (let i = 0; i < f7variants.length; i++) {
-      const f7 = f7variants[i];
-      r7d = await gql(token, accountId,
-        `{viewer{accounts(filter:{accountTag:"${accountId}"}){rumPageloadEventsAdaptiveGroups(filter:{${f7}} limit:500 orderBy:[date_ASC]){count avg{sampleInterval}dimensions{date}}}}}`
-      );
-      if (!r7d._accountFound) {
-        return Response.json({
-          ok: false,
-          error: 'CF_ACCOUNT_ID nesedí s tímto API tokenem – zkontroluj Account ID v Cloudflare dashboard'
-        }, { status: 403 });
-      }
-      const groups = r7d.rumPageloadEventsAdaptiveGroups || [];
+    let r7d, rH, rP, rD, usedMode = 'none';
+
+    for (const { tagType, tagVal } of attempts) {
+      const q = makeQueries(tagType, tagVal);
+      const test = await gqlQuery(token, tagVal, tagType, q.d7);
+      if (!test) continue;
+      const groups = test.rumPageloadEventsAdaptiveGroups || [];
       if (groups.length > 0) {
-        // Tato varianta funguje — načti zbytek paralelně
-        const fToday = fTodayVariants[i];
-        const f7cur  = f7variants[i];
-        usedFilter = ['siteTag', 'token', 'noTag'][i];
+        r7d = test;
+        usedMode = tagType;
         [rH, rP, rD] = await Promise.all([
-          gql(token, accountId, `{viewer{accounts(filter:{accountTag:"${accountId}"}){rumPageloadEventsAdaptiveGroups(filter:{${fToday}} limit:100 orderBy:[datetimeHour_ASC]){count avg{sampleInterval}dimensions{datetimeHour}}}}}`),
-          gql(token, accountId, `{viewer{accounts(filter:{accountTag:"${accountId}"}){rumPageloadEventsAdaptiveGroups(filter:{${f7cur}} limit:50){count avg{sampleInterval}dimensions{requestPath}}}}}`),
-          gql(token, accountId, `{viewer{accounts(filter:{accountTag:"${accountId}"}){rumPageloadEventsAdaptiveGroups(filter:{${f7cur}} limit:10){count avg{sampleInterval}dimensions{deviceType}}}}}`)
+          gqlQuery(token, tagVal, tagType, q.h),
+          gqlQuery(token, tagVal, tagType, q.p),
+          gqlQuery(token, tagVal, tagType, q.dev),
         ]);
         break;
       }
     }
 
-    // Pokud žádná varianta nevrátila data
-    if (!rH) {
-      const fToday = fTodayVariants[2]; // bez filtru
-      [rH, rP, rD] = await Promise.all([
-        gql(token, accountId, `{viewer{accounts(filter:{accountTag:"${accountId}"}){rumPageloadEventsAdaptiveGroups(filter:{${fToday}} limit:100 orderBy:[datetimeHour_ASC]){count avg{sampleInterval}dimensions{datetimeHour}}}}}`),
-        gql(token, accountId, `{viewer{accounts(filter:{accountTag:"${accountId}"}){rumPageloadEventsAdaptiveGroups(filter:{${filters.noTag}} limit:50){count avg{sampleInterval}dimensions{requestPath}}}}}`),
-        gql(token, accountId, `{viewer{accounts(filter:{accountTag:"${accountId}"}){rumPageloadEventsAdaptiveGroups(filter:{${filters.noTag}} limit:10){count avg{sampleInterval}dimensions{deviceType}}}}}`)
-      ]);
-    }
-
     // 7 dní
     const byDate = {}; let total = 0;
-    for (const g of (r7d.rumPageloadEventsAdaptiveGroups || [])) {
+    for (const g of ((r7d && r7d.rumPageloadEventsAdaptiveGroups) || [])) {
       const v = est(g), dd = g.dimensions && g.dimensions.date;
       total += v; if (dd) byDate[dd] = (byDate[dd] || 0) + v;
     }
@@ -144,7 +160,9 @@ export async function onRequestGet(context) {
       const p = (g.dimensions && g.dimensions.requestPath) || '/';
       pathMap[p] = (pathMap[p] || 0) + est(g);
     }
-    const topPages = Object.entries(pathMap).sort((a, b) => b[1] - a[1]).slice(0, 5).map(e => ({ path: e[0], count: e[1] }));
+    const topPages = Object.entries(pathMap)
+      .sort((a, b) => b[1] - a[1]).slice(0, 5)
+      .map(e => ({ path: e[0], count: e[1] }));
 
     // Zařízení
     const devMap = {};
@@ -153,13 +171,15 @@ export async function onRequestGet(context) {
       devMap[t] = (devMap[t] || 0) + est(g);
     }
     const devTotal = Object.values(devMap).reduce((a, b) => a + b, 0) || 1;
-    const devices = Object.entries(devMap).sort((a, b) => b[1] - a[1]).map(e => ({ type: e[0], count: e[1], pct: Math.round(e[1] / devTotal * 100) }));
+    const devices = Object.entries(devMap)
+      .sort((a, b) => b[1] - a[1])
+      .map(e => ({ type: e[0], count: e[1], pct: Math.round(e[1] / devTotal * 100) }));
 
     const warning = (total === 0)
-      ? 'Data stále nejdou – otevři /api/analytics?debug=1 a zkopíruj výsledek'
+      ? `Žádná data (mode: ${usedMode}, zoneId: ${zoneId || 'nenalezeno'}) – otevři /api/analytics?debug=1`
       : null;
 
-    return Response.json({ ok: true, pageviews: total, todayPv, days, hours, topPages, devices, warning, usedFilter });
+    return Response.json({ ok: true, pageviews: total, todayPv, days, hours, topPages, devices, warning, usedMode });
 
   } catch (e) {
     return Response.json({ ok: false, error: e.message }, { status: 500 });
