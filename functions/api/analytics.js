@@ -62,11 +62,11 @@ export async function onRequestGet(context) {
         }
       }}}`),
 
-      // Dnes po hodinách — httpRequests1hGroups
+      // Dnes po hodinách — adaptive, max 1 den (limit OK)
       gql(token, `{viewer{zones(filter:{${zf}}){
-        httpRequests1hGroups(limit:24 filter:{date_geq:"${today}",date_leq:"${today}"}){
+        httpRequestsAdaptiveGroups(limit:100 filter:{AND:[{date_geq:"${today}"},{date_leq:"${today}"}]}){
+          count avg{sampleInterval}
           dimensions{datetimeHour}
-          sum{pageViews}
         }
       }}}`),
 
@@ -95,8 +95,8 @@ export async function onRequestGet(context) {
 
     // ── Dnes po hodinách ────────────────────────────────────
     const byHour = {}; let todayPv = 0;
-    for (const g of (rH.httpRequests1hGroups || [])) {
-      const v = g.sum && g.sum.pageViews || 0;
+    for (const g of (rH.httpRequestsAdaptiveGroups || [])) {
+      const v = Math.round(g.count * ((g.avg && g.avg.sampleInterval) || 1));
       const raw = g.dimensions && g.dimensions.datetimeHour;
       todayPv += v;
       if (raw) { const h = parseInt(raw.slice(11, 13), 10); byHour[h] = (byHour[h] || 0) + v; }
