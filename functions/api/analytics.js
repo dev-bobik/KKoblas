@@ -1,12 +1,10 @@
 const GQL_URL = 'https://api.cloudflare.com/client/v4/graphql';
 const CF_API  = 'https://api.cloudflare.com/client/v4';
 
-// Stránky webu – filtr aby se nepočítaly .css/.js/obrázky
 const PAGE_PATHS = new Set(['/', '/sluzby.html', '/omne.html', '/jakpracuji.html',
   '/faq.html', '/kontakt.html', '/objednavka.html', '/dekujeme.html', '/cekacka.html']);
 
 function fmt(d) { return d.toISOString().split('T')[0]; }
-function est(g)  { return Math.round(g.count * ((g.avg && g.avg.sampleInterval) || 1)); }
 
 function hdr(token) {
   return { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
@@ -23,7 +21,7 @@ async function findZoneId(token, accountId) {
   } catch { return null; }
 }
 
-async function gqlZone(token, zoneId, query) {
+async function gql(token, query) {
   const r = await fetch(GQL_URL, {
     method: 'POST',
     headers: hdr(token),
@@ -38,7 +36,6 @@ async function gqlZone(token, zoneId, query) {
 export async function onRequestGet(context) {
   const accountId = context.env.CF_ACCOUNT_ID;
   const token     = context.env.CF_API_TOKEN;
-  const isDebug   = new URL(context.request.url).searchParams.get('debug') === '1';
 
   if (!accountId || !token) {
     return Response.json({ ok: false, error: 'Chybí CF_ACCOUNT_ID nebo CF_API_TOKEN' }, { status: 503 });
@@ -46,47 +43,48 @@ export async function onRequestGet(context) {
 
   const zone = await findZoneId(token, accountId);
   if (!zone) {
-    return Response.json({ ok: false, error: 'Nepodařilo se najít žádnou zónu v CF účtu. Zkontroluj CF_ACCOUNT_ID a token.' }, { status: 503 });
+    return Response.json({ ok: false, error: 'Nepodařilo se najít zónu v CF účtu.' }, { status: 503 });
   }
 
   const now    = new Date();
   const today  = fmt(now);
   const start7 = fmt(new Date(now.getTime() - 6 * 86400000));
+  const zf     = `zoneTag:"${zone.id}"`;
 
-  const f7 = `AND:[{date_geq:"${start7}"},{date_leq:"${today}"}]`;
-  const fH = `AND:[{datetime_geq:"${today}T00:00:00Z"},{datetime_leq:"${today}T23:59:59Z"}]`;
-  const zf = `zoneTag:"${zone.id}"`;
-
-  // Debug mode – ukaž co vrátí různé datasety
-  if (isDebug) {
-    const tests = {};
-    const datasets = ['httpRequestsAdaptiveGroups', 'httpRequests1dGroups', 'httpRequestsOverviewAdaptiveGroups'];
-    for (const ds of datasets) {
-      try {
-        const q = `{viewer{zones(filter:{${zf}}){${ds}(filter:{${f7}} limit:3 orderBy:[date_ASC]){count avg{sampleInterval}dimensions{date}}}}}`;
-        const r = await gqlZone(token, zone.id, q);
-        const groups = r[ds] || [];
-        tests[ds] = { groups: groups.length, total: groups.reduce((s,g) => s+est(g), 0), sample: groups.slice(0,2) };
-      } catch(e) { tests[ds] = { error: e.message }; }
-    }
-    return Response.json({ ok: true, debug: true, zone, tests });
-  }
-
-  // ── Hlavní dotazy paralelně ────────────────────────────────────────
   try {
     const [r7d, rH, rP] = await Promise.all([
-      // 7 dní – agregace po dnech
-      gqlZone(token, zone.id, `{viewer{zones(filter:{${zf}}){httpRequestsAdaptiveGroups(filter:{${f7}} limit:500 orderBy:[date_ASC]){count avg{sampleInterval}dimensions{date}}}}}`),
-      // Dnes – agregace po hodinách
-      gqlZone(token, zone.id, `{viewer{zones(filter:{${zf}}){httpRequestsAdaptiveGroups(filter:{${fH}} limit:100 orderBy:[datetimeHour_ASC]){count avg{sampleInterval}dimensions{datetimeHour}}}}}`),
-      // Top stránky – agregace po cestě
-      gqlZone(token, zone.id, `{viewer{zones(filter:{${zf}}){httpRequestsAdaptiveGroups(filter:{${f7}} limit:200){count avg{sampleInterval}dimensions{clientRequestPath}}}}}`)
+
+      // 7 dní — httpRequests1dGroups podporuje širší rozsah, má přímo sum.pageViews
+      gql(token, `{viewer{zones(filter:{${zf}}){
+        httpRequests1dGroups(limit:7 filter:{date_geq:"${start7}",date_leq:"${today}"} orderBy:[date_ASC]){
+          dimensions{date}
+          sum{pageViews}
+        }
+      }}}`),
+
+      // Dnes po hodinách — httpRequests1hGroups
+      gql(token, `{viewer{zones(filter:{${zf}}){
+        httpRequests1hGroups(limit:24 filter:{date_geq:"${today}",date_leq:"${today}"} orderBy:[datetimeHour_ASC]){
+          dimensions{datetimeHour}
+          sum{pageViews}
+        }
+      }}}`),
+
+      // Top stránky dnes — adaptive max 1 den, limit splněn
+      gql(token, `{viewer{zones(filter:{${zf}}){
+        httpRequestsAdaptiveGroups(limit:200 filter:{AND:[{date_geq:"${today}"},{date_leq:"${today}"}]}){
+          count avg{sampleInterval}
+          dimensions{clientRequestPath}
+        }
+      }}}`)
+
     ]);
 
-    // 7 dní
+    // ── 7 dní ────────────────────────────────────────────────
     const byDate = {}; let total = 0;
-    for (const g of (r7d.httpRequestsAdaptiveGroups || [])) {
-      const v = est(g), dd = g.dimensions && g.dimensions.date;
+    for (const g of (r7d.httpRequests1dGroups || [])) {
+      const v = g.sum && g.sum.pageViews || 0;
+      const dd = g.dimensions && g.dimensions.date;
       total += v; if (dd) byDate[dd] = (byDate[dd] || 0) + v;
     }
     const days = [];
@@ -95,21 +93,25 @@ export async function onRequestGet(context) {
       days.push({ date: s, count: byDate[s] || 0 });
     }
 
-    // Dnes po hodinách
+    // ── Dnes po hodinách ────────────────────────────────────
     const byHour = {}; let todayPv = 0;
-    for (const g of (rH.httpRequestsAdaptiveGroups || [])) {
-      const v = est(g), raw = g.dimensions && g.dimensions.datetimeHour;
+    for (const g of (rH.httpRequests1hGroups || [])) {
+      const v = g.sum && g.sum.pageViews || 0;
+      const raw = g.dimensions && g.dimensions.datetimeHour;
       todayPv += v;
       if (raw) { const h = parseInt(raw.slice(11, 13), 10); byHour[h] = (byHour[h] || 0) + v; }
     }
     const hours = [];
     for (let h = 0; h <= 23; h++) hours.push({ hour: h, count: byHour[h] || 0 });
 
-    // Top stránky – filtruj jen HTML stránky, ne assety
+    // ── Top stránky (jen HTML stránky) ──────────────────────
     const pathMap = {};
     for (const g of (rP.httpRequestsAdaptiveGroups || [])) {
       const p = (g.dimensions && g.dimensions.clientRequestPath) || '/';
-      if (PAGE_PATHS.has(p)) pathMap[p] = (pathMap[p] || 0) + est(g);
+      if (PAGE_PATHS.has(p)) {
+        const v = Math.round(g.count * ((g.avg && g.avg.sampleInterval) || 1));
+        pathMap[p] = (pathMap[p] || 0) + v;
+      }
     }
     const topPages = Object.entries(pathMap)
       .sort((a, b) => b[1] - a[1]).slice(0, 5)
@@ -117,8 +119,7 @@ export async function onRequestGet(context) {
 
     return Response.json({
       ok: true, pageviews: total, todayPv, days, hours, topPages,
-      devices: [],   // httpRequests nemá device dimension – zobrazí se „žádná data"
-      _zone: zone.name
+      devices: [], _zone: zone.name
     });
 
   } catch (e) {
