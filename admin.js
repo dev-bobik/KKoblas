@@ -10,7 +10,15 @@ var lockError  = document.getElementById('lockError');
 var deployBar  = document.getElementById('deployBar');
 var deployMsg  = document.getElementById('deployMsg');
 
-var currentStatus = { startup: 'volny', mentoring: 'volny', ultimate: 'volny', event: { active: false, name: '', popis: '', odkaz: '' } };
+var currentStatus = {
+  startup: 'volny', mentoring: 'volny', ultimate: 'volny',
+  event: { active: false, name: '', popis: '', odkaz: '' },
+  prices: {
+    startup:  { jednorizove: '6 900 Kč' },
+    mentoring: { jednorizove: '14 700 Kč', splatky: '7 500 Kč (1. splátka)' },
+    ultimate:  { jednorizove: '22 300 Kč', splatky: '11 900 Kč (1. splátka)' }
+  }
+};
 
 // ── Auth ─────────────────────────────────────────
 function unlock() {
@@ -106,6 +114,20 @@ function renderStation(sluzba) {
 function renderAll() {
   SERVICES.forEach(renderStation);
   renderEvent();
+  renderPrices();
+}
+
+function renderPrices() {
+  var p  = currentStatus.prices || {};
+  var su = p.startup   || {};
+  var me = p.mentoring || {};
+  var ul = p.ultimate  || {};
+  var el;
+  el = document.getElementById('priceStartupJed');  if (el) el.value = su.jednorizove || '6 900 Kč';
+  el = document.getElementById('priceMentoringJed'); if (el) el.value = me.jednorizove || '14 700 Kč';
+  el = document.getElementById('priceMentoringSpl'); if (el) el.value = me.splatky     || '7 500 Kč (1. splátka)';
+  el = document.getElementById('priceUltimateJed');  if (el) el.value = ul.jednorizove || '22 300 Kč';
+  el = document.getElementById('priceUltimateSpl');  if (el) el.value = ul.splatky     || '11 900 Kč (1. splátka)';
 }
 
 function renderEvent() {
@@ -241,6 +263,22 @@ function buildAnHTML(d) {
     +   '<div class="an-block"><div class="an-block__title">ZAŘÍZENÍ</div><ul class="an-devs">' + devicesHTML + '</ul></div>'
     + '</div>';
 }
+
+// ── Price save ───────────────────────────────────
+document.getElementById('priceSave').addEventListener('click', async function () {
+  currentStatus.prices = {
+    startup:  { jednorizove: document.getElementById('priceStartupJed').value.trim()  || '6 900 Kč' },
+    mentoring: {
+      jednorizove: document.getElementById('priceMentoringJed').value.trim() || '14 700 Kč',
+      splatky:     document.getElementById('priceMentoringSpl').value.trim() || '7 500 Kč (1. splátka)'
+    },
+    ultimate: {
+      jednorizove: document.getElementById('priceUltimateJed').value.trim()  || '22 300 Kč',
+      splatky:     document.getElementById('priceUltimateSpl').value.trim()  || '11 900 Kč (1. splátka)'
+    }
+  };
+  await saveStatus();
+});
 
 // ── Event save ───────────────────────────────────
 document.getElementById('eventSave').addEventListener('click', async function () {

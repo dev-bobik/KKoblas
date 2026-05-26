@@ -92,12 +92,12 @@
             <div class="pkg-card__meta">
               <span class="pkg-card__duration">1 měsíc</span>
               <div class="pkg-card__pricing">
-                <span class="pkg-card__price">6 900 Kč</span>
+                <span class="pkg-card__price" id="price-startup">6 900 Kč</span>
                 <span class="pkg-card__price-note">V první faktuře automaticky odečítám 800 Kč paušální slevu na InBody měření.</span>
               </div>
             </div>
             <div class="pkg-btns pkg-btns--normal">
-              <a href="objednavka.html?sluzba=startup" class="btn btn--primary btn--block">Objednat za 6 900 Kč</a>
+              <a href="objednavka.html?sluzba=startup" class="btn btn--primary btn--block" id="btn-startup-order">Objednat za 6 900 Kč</a>
             </div>
             <div class="pkg-btns pkg-btns--plno">
               <p class="plno-notice">Kapacita je momentálně plná.</p>
@@ -141,14 +141,14 @@
             <div class="pkg-card__meta">
               <span class="pkg-card__duration">4 měsíce</span>
               <div class="pkg-card__pricing">
-                <span class="pkg-card__price">14 700 Kč</span>
+                <span class="pkg-card__price" id="price-mentoring">14 700 Kč</span>
                 <span class="pkg-card__price-inbody">bez InBody: 15 900 Kč (−1 200 Kč)</span>
                 <span class="pkg-card__price-note">Nebo splátky: 7 500 Kč (v 1. měs. po slevě jen 6 200 Kč) + 3× 2 800 Kč.</span>
               </div>
             </div>
             <div class="pkg-btns pkg-btns--normal">
-              <a href="objednavka.html?sluzba=mentoring&platba=jednorizove" class="btn btn--primary btn--block">Koupit jednorázově za 14 700 Kč</a>
-              <a href="objednavka.html?sluzba=mentoring&platba=splatky" class="btn btn--outline btn--block">Chci na splátky – 1. platba 7 500 Kč</a>
+              <a href="objednavka.html?sluzba=mentoring&platba=jednorizove" class="btn btn--primary btn--block" id="btn-mentoring-jed">Koupit jednorázově za 14 700 Kč</a>
+              <a href="objednavka.html?sluzba=mentoring&platba=splatky" class="btn btn--outline btn--block" id="btn-mentoring-spl">Chci na splátky – 1. platba 7 500 Kč</a>
             </div>
             <div class="pkg-btns pkg-btns--plno">
               <p class="plno-notice">Kapacita je momentálně plná.</p>
@@ -195,14 +195,14 @@
             <div class="pkg-card__meta">
               <span class="pkg-card__duration">6 měsíců</span>
               <div class="pkg-card__pricing">
-                <span class="pkg-card__price">22 300 Kč</span>
+                <span class="pkg-card__price" id="price-ultimate">22 300 Kč</span>
                 <span class="pkg-card__price-inbody">bez InBody: 23 900 Kč (−1 600 Kč)</span>
                 <span class="pkg-card__price-note">Nebo splátky: 11 900 Kč (po slevě na InBody jen 10 300 Kč) + 5× 2 400 Kč.</span>
               </div>
             </div>
             <div class="pkg-btns pkg-btns--normal">
-              <a href="objednavka.html?sluzba=ultimate&platba=jednorizove" class="btn btn--primary btn--block">Koupit jednorázově za 22 300 Kč</a>
-              <a href="objednavka.html?sluzba=ultimate&platba=splatky" class="btn btn--outline btn--block">Chci na splátky – 1. platba 11 900 Kč</a>
+              <a href="objednavka.html?sluzba=ultimate&platba=jednorizove" class="btn btn--primary btn--block" id="btn-ultimate-jed">Koupit jednorázově za 22 300 Kč</a>
+              <a href="objednavka.html?sluzba=ultimate&platba=splatky" class="btn btn--outline btn--block" id="btn-ultimate-spl">Chci na splátky – 1. platba 11 900 Kč</a>
             </div>
             <div class="pkg-btns pkg-btns--plno">
               <p class="plno-notice">Kapacita je momentálně plná.</p>
@@ -295,9 +295,9 @@
         </div>
         <div class="footer__resource">
           <div class="footer__resource-icons">
-            <span class="footer__icon-pill footer__icon-pill--strava" aria-label="Strava">
+            <a href="https://www.strava.com/athletes/113330887" target="_blank" rel="noopener" class="footer__icon-pill footer__icon-pill--strava" aria-label="Strava">
               <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
-            </span>
+            </a>
           </div>
           <div>
             <a href="https://www.strava.com/athletes/113330887" target="_blank" rel="noopener" class="footer__resource-title footer__resource-title--link">Strava</a>
@@ -314,6 +314,28 @@
 
   <script src="script.js"></script>
   <script src="sluzby.js"></script>
+  <script>
+    (function () {
+      fetch('/api/status', { cache: 'no-store' })
+        .then(function (r) { return r.json(); })
+        .then(function (s) {
+          var p  = s.prices || {};
+          var su = p.startup   || {};
+          var me = p.mentoring || {};
+          var ul = p.ultimate  || {};
+          function set(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; }
+          set('price-startup',  su.jednorizove || '6 900 Kč');
+          set('price-mentoring', me.jednorizove || '14 700 Kč');
+          set('price-ultimate',  ul.jednorizove || '22 300 Kč');
+          set('btn-startup-order',  'Objednat za ' + (su.jednorizove || '6 900 Kč'));
+          set('btn-mentoring-jed',  'Koupit jednorázově za ' + (me.jednorizove || '14 700 Kč'));
+          set('btn-mentoring-spl',  'Chci na splátky – 1. platba ' + (me.splatky || '7 500 Kč (1. splátka)').split(' ')[0] + ' Kč');
+          set('btn-ultimate-jed',   'Koupit jednorázově za ' + (ul.jednorizove || '22 300 Kč'));
+          set('btn-ultimate-spl',   'Chci na splátky – 1. platba ' + (ul.splatky || '11 900 Kč (1. splátka)').split(' ')[0] + ' Kč');
+        })
+        .catch(function () {});
+    })();
+  </script>
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "4e27e2346fde40e68f3f03fac3e2c036"}'></script>
   <!-- End Cloudflare Web Analytics -->

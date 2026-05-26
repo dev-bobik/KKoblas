@@ -160,6 +160,10 @@
   border-radius: 50px;
   border: 1px solid rgba(255,255,255,.1);
   transition: color .2s, border-color .2s, background .2s;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
 }
 .ty-link:hover { color: var(--gold-light); border-color: rgba(201,168,76,.35); background: rgba(201,168,76,.05); }
 .ty-link svg { width: 17px; height: 17px; opacity: .6; flex-shrink: 0; }

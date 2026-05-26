@@ -1,22 +1,34 @@
-var serviceMap = {
-  startup: {
-    label: 'START-UP – Profi odrazový můstek',
-    jednorizove: { platba: 'Jednorázová platba', price: '6 900 Kč' },
-    splatky:     { platba: 'Jednorázová platba', price: '6 900 Kč' }
-  },
-  mentoring: {
-    label: 'MENTORING – Individuální vedení',
-    jednorizove: { platba: 'Jednorázová platba', price: '14 700 Kč' },
-    splatky:     { platba: 'Splátkový kalendář', price: '7 500 Kč (1. splátka)' }
-  },
-  ultimate: {
-    label: 'ULTIMATE – Maximální výkon a biohacking',
-    jednorizove: { platba: 'Jednorázová platba', price: '22 300 Kč' },
-    splatky:     { platba: 'Splátkový kalendář', price: '11 900 Kč (1. splátka)' }
-  }
+var DEFAULT_PRICES = {
+  startup:  { jednorizove: '6 900 Kč' },
+  mentoring: { jednorizove: '14 700 Kč', splatky: '7 500 Kč (1. splátka)' },
+  ultimate:  { jednorizove: '22 300 Kč', splatky: '11 900 Kč (1. splátka)' }
 };
 
-(function () {
+function buildServiceMap(prices) {
+  var p = prices || {};
+  var su = p.startup   || DEFAULT_PRICES.startup;
+  var me = p.mentoring || DEFAULT_PRICES.mentoring;
+  var ul = p.ultimate  || DEFAULT_PRICES.ultimate;
+  return {
+    startup: {
+      label: 'START-UP – Profi odrazový můstek',
+      jednorizove: { platba: 'Jednorázová platba', price: su.jednorizove || DEFAULT_PRICES.startup.jednorizove },
+      splatky:     { platba: 'Jednorázová platba', price: su.jednorizove || DEFAULT_PRICES.startup.jednorizove }
+    },
+    mentoring: {
+      label: 'MENTORING – Individuální vedení',
+      jednorizove: { platba: 'Jednorázová platba', price: me.jednorizove || DEFAULT_PRICES.mentoring.jednorizove },
+      splatky:     { platba: 'Splátkový kalendář', price: me.splatky     || DEFAULT_PRICES.mentoring.splatky }
+    },
+    ultimate: {
+      label: 'ULTIMATE – Maximální výkon a biohacking',
+      jednorizove: { platba: 'Jednorázová platba', price: ul.jednorizove || DEFAULT_PRICES.ultimate.jednorizove },
+      splatky:     { platba: 'Splátkový kalendář', price: ul.splatky     || DEFAULT_PRICES.ultimate.splatky }
+    }
+  };
+}
+
+function initOrder(serviceMap) {
   var params  = new URLSearchParams(location.search);
   var sluzba  = params.get('sluzba') || 'startup';
   var platba  = params.get('platba') || 'jednorizove';
@@ -24,11 +36,11 @@ var serviceMap = {
   var svc  = serviceMap[sluzba] || serviceMap.startup;
   var info = svc[platba] || svc.jednorizove;
 
-  var nameEl  = document.getElementById('orderServiceName');
+  var nameEl   = document.getElementById('orderServiceName');
   var platbaEl = document.getElementById('orderPlatba');
   var priceEl  = document.getElementById('orderPrice');
 
-  if (nameEl)  nameEl.textContent  = svc.label;
+  if (nameEl)   nameEl.textContent   = svc.label;
   if (platbaEl) platbaEl.textContent = info.platba;
   if (priceEl)  priceEl.textContent  = info.price;
 
@@ -88,4 +100,11 @@ var serviceMap = {
       if (errorEl) { errorEl.hidden = false; errorEl.textContent = err.message || 'Chyba odesílání'; }
     }
   });
+}
+
+(function () {
+  fetch('/api/status', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (status) { initOrder(buildServiceMap(status.prices)); })
+    .catch(function () { initOrder(buildServiceMap(null)); });
 })();

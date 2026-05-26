@@ -131,7 +131,7 @@
             <div class="form-grid form-grid--3">
               <div class="form-group">
                 <label for="fage">Věk <span class="req">*</span></label>
-                <input type="number" id="fage" name="Vek" required min="16" max="99" placeholder="28">
+                <input type="number" id="fage" name="Vek" required placeholder="28">
               </div>
               <div class="form-group">
                 <label for="fgender">Pohlaví <span class="req">*</span></label>
@@ -139,24 +139,25 @@
                   <option value="">Vyberte</option>
                   <option value="Muz">Muž</option>
                   <option value="Zena">Žena</option>
+                  <option disabled>──────────</option>
                   <option value="Jine">Jiné</option>
                 </select>
               </div>
               <div class="form-group">
                 <label for="fheight">Výška (cm) <span class="req">*</span></label>
-                <input type="number" id="fheight" name="Vyska_cm" required min="140" max="220" placeholder="175">
+                <input type="number" id="fheight" name="Vyska_cm" required placeholder="175">
               </div>
               <div class="form-group">
                 <label for="fweight">Váha (kg) <span class="req">*</span></label>
-                <input type="number" id="fweight" name="Vaha_kg" required min="40" max="250" placeholder="80">
+                <input type="number" id="fweight" name="Vaha_kg" required placeholder="80">
               </div>
               <div class="form-group">
                 <label for="fhips">Obvod boků (cm) <span class="form-hint-inline">(vhodné)</span></label>
-                <input type="number" id="fhips" name="Obvod_boku_cm" min="60" max="180" placeholder="95">
+                <input type="number" id="fhips" name="Obvod_boku_cm" placeholder="95">
               </div>
               <div class="form-group">
                 <label for="fwaist">Obvod pasu (cm) <span class="form-hint-inline">(vhodné)</span></label>
-                <input type="number" id="fwaist" name="Obvod_pasu_cm" min="50" max="180" placeholder="80">
+                <input type="number" id="fwaist" name="Obvod_pasu_cm" placeholder="80">
               </div>
             </div>
 
@@ -242,9 +243,9 @@
 
         <div class="footer__resource">
           <div class="footer__resource-icons">
-            <span class="footer__icon-pill footer__icon-pill--strava" aria-label="Strava">
+            <a href="https://www.strava.com/athletes/113330887" target="_blank" rel="noopener" class="footer__icon-pill footer__icon-pill--strava" aria-label="Strava">
               <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
-            </span>
+            </a>
           </div>
           <div>
             <a href="https://www.strava.com/athletes/113330887" target="_blank" rel="noopener" class="footer__resource-title footer__resource-title--link">Strava</a>

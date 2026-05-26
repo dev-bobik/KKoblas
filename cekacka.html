@@ -75,15 +75,15 @@
             <div class="ck-services__grid">
               <label class="ck-check">
                 <input type="checkbox" name="Zajem" value="START-UP">
-                <span>START-UP<br><em>6 900 Kč · 1 měsíc</em></span>
+                <span>START-UP<br><em id="ck-price-startup">6 900 Kč · 1 měsíc</em></span>
               </label>
               <label class="ck-check">
                 <input type="checkbox" name="Zajem" value="MENTORING">
-                <span>MENTORING<br><em>15 900 Kč · 4 měsíce</em></span>
+                <span>MENTORING<br><em id="ck-price-mentoring">15 900 Kč · 4 měsíce</em></span>
               </label>
               <label class="ck-check">
                 <input type="checkbox" name="Zajem" value="ULTIMATE">
-                <span>ULTIMATE<br><em>23 900 Kč · 6 měsíců</em></span>
+                <span>ULTIMATE<br><em id="ck-price-ultimate">23 900 Kč · 6 měsíců</em></span>
               </label>
             </div>
           </fieldset>
@@ -147,9 +147,9 @@
 
         <div class="footer__resource">
           <div class="footer__resource-icons">
-            <span class="footer__icon-pill footer__icon-pill--strava" aria-label="Strava">
+            <a href="https://www.strava.com/athletes/113330887" target="_blank" rel="noopener" class="footer__icon-pill footer__icon-pill--strava" aria-label="Strava">
               <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
-            </span>
+            </a>
           </div>
           <div>
             <a href="https://www.strava.com/athletes/113330887" target="_blank" rel="noopener" class="footer__resource-title footer__resource-title--link">Strava</a>
@@ -168,6 +168,23 @@
 
   <script src="script.js"></script>
   <script src="cekacka.js"></script>
+  <script>
+    (function () {
+      fetch('/api/status', { cache: 'no-store' })
+        .then(function (r) { return r.json(); })
+        .then(function (s) {
+          var p  = s.prices || {};
+          var su = p.startup   || {};
+          var me = p.mentoring || {};
+          var ul = p.ultimate  || {};
+          function set(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; }
+          set('ck-price-startup',   (su.jednorizove || '6 900 Kč')  + ' · 1 měsíc');
+          set('ck-price-mentoring', (me.jednorizove || '14 700 Kč') + ' · 4 měsíce');
+          set('ck-price-ultimate',  (ul.jednorizove || '22 300 Kč') + ' · 6 měsíců');
+        })
+        .catch(function () {});
+    })();
+  </script>
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "4e27e2346fde40e68f3f03fac3e2c036"}'></script>
   <!-- End Cloudflare Web Analytics -->

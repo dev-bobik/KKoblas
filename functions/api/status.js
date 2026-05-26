@@ -1,4 +1,12 @@
-const DEFAULT = { startup: 'volny', mentoring: 'volny', ultimate: 'volny', event: { active: false, name: '', popis: '', odkaz: '' } };
+const DEFAULT = {
+  startup: 'volny', mentoring: 'volny', ultimate: 'volny',
+  event: { active: false, name: '', popis: '', odkaz: '' },
+  prices: {
+    startup:  { jednorizove: '6 900 Kč' },
+    mentoring: { jednorizove: '14 700 Kč', splatky: '7 500 Kč (1. splátka)' },
+    ultimate:  { jednorizove: '22 300 Kč', splatky: '11 900 Kč (1. splátka)' }
+  }
+};
 
 export async function onRequestGet(context) {
   try {
@@ -22,6 +30,7 @@ export async function onRequestPost(context) {
       return new Response('Unauthorized', { status: 401 });
     }
     const allowed = ['volny', 'uzavreny'];
+    const DEF_P = DEFAULT.prices;
     const status = {
       startup:   allowed.includes(body.startup)   ? body.startup   : 'volny',
       mentoring: allowed.includes(body.mentoring) ? body.mentoring : 'volny',
@@ -31,6 +40,17 @@ export async function onRequestPost(context) {
         name:   (body.event?.name  || '').slice(0, 120),
         popis:  (body.event?.popis || '').slice(0, 500),
         odkaz:  (body.event?.odkaz || '').slice(0, 300)
+      },
+      prices: {
+        startup:  { jednorizove: String(body.prices?.startup?.jednorizove  || DEF_P.startup.jednorizove).slice(0, 80) },
+        mentoring: {
+          jednorizove: String(body.prices?.mentoring?.jednorizove || DEF_P.mentoring.jednorizove).slice(0, 80),
+          splatky:     String(body.prices?.mentoring?.splatky     || DEF_P.mentoring.splatky).slice(0, 120)
+        },
+        ultimate: {
+          jednorizove: String(body.prices?.ultimate?.jednorizove  || DEF_P.ultimate.jednorizove).slice(0, 80),
+          splatky:     String(body.prices?.ultimate?.splatky      || DEF_P.ultimate.splatky).slice(0, 120)
+        }
       }
     };
     await context.env.STATUS_STORE.put('status', JSON.stringify(status));

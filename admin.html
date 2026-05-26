@@ -118,15 +118,62 @@
       </div>
       <div class="event-panel__fields">
         <label class="event-label">Název eventu
-          <input type="text" id="eventName" class="event-input" placeholder="např. Workshop – Výživa pro sport" maxlength="120">
+          <input type="text" id="eventName" class="event-input" placeholder="např. Workshop – Výživa pro sport">
         </label>
         <label class="event-label">Popisek
-          <textarea id="eventPopis" class="event-input event-textarea" placeholder="Krátký popis eventu..." maxlength="500"></textarea>
+          <textarea id="eventPopis" class="event-input event-textarea" placeholder="Krátký popis eventu..."></textarea>
         </label>
         <label class="event-label">Odkaz (volitelné)
           <input type="url" id="eventOdkaz" class="event-input" placeholder="https://...">
         </label>
         <button class="event-save-btn" id="eventSave">💾 ULOŽIT EVENT</button>
+      </div>
+    </div>
+
+    <!-- ── Ceny ──────────────────────────────────── -->
+    <div class="event-panel" id="pricePanel">
+      <div class="event-panel__header">
+        <div class="event-panel__title">
+          <span class="station-label">CENY SLUŽEB</span>
+          <span class="station-duration">Zobrazí se na stránkách Služby, Objednávka a Čekačka</span>
+        </div>
+      </div>
+      <div class="event-panel__fields price-fields">
+
+        <div class="price-row">
+          <span class="price-row__label">START-UP</span>
+          <div class="price-row__inputs">
+            <label class="event-label">Cena
+              <input type="text" id="priceStartupJed" class="event-input" placeholder="6 900 Kč">
+            </label>
+          </div>
+        </div>
+
+        <div class="price-row">
+          <span class="price-row__label">MENTORING</span>
+          <div class="price-row__inputs">
+            <label class="event-label">Jednorázově
+              <input type="text" id="priceMentoringJed" class="event-input" placeholder="14 700 Kč">
+            </label>
+            <label class="event-label">1. splátka
+              <input type="text" id="priceMentoringSpl" class="event-input" placeholder="7 500 Kč (1. splátka)">
+            </label>
+          </div>
+        </div>
+
+        <div class="price-row">
+          <span class="price-row__label">ULTIMATE</span>
+          <div class="price-row__inputs">
+            <label class="event-label">Jednorázově
+              <input type="text" id="priceUltimateJed" class="event-input" placeholder="22 300 Kč">
+            </label>
+            <label class="event-label">1. splátka
+              <input type="text" id="priceUltimateSpl" class="event-input" placeholder="11 900 Kč (1. splátka)">
+            </label>
+          </div>
+        </div>
+
+        <button class="event-save-btn" id="priceSave">💾 ULOŽIT CENY</button>
       </div>
     </div>
 
