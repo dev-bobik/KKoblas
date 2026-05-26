@@ -171,7 +171,7 @@ async function loadAnalytics() {
   var btn = document.getElementById('anRefresh');
   if (btn) { btn.disabled = true; btn.textContent = '↻ ...'; }
   try {
-    var r = await fetch('/api/analytics');
+    var r = await fetch('/api/analytics?t=' + Date.now(), { cache: 'no-store' });
     var d = await r.json();
     if (!d.ok) {
       body.innerHTML = '<div class="an-err-box">'

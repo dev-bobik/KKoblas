@@ -117,10 +117,11 @@ export async function onRequestGet(context) {
       .sort((a, b) => b[1] - a[1]).slice(0, 5)
       .map(e => ({ path: e[0], count: e[1] }));
 
+    const noCache = { headers: { 'Cache-Control': 'no-store, no-cache, must-revalidate' } };
     return Response.json({
       ok: true, pageviews: total, todayPv, days, hours, topPages,
       devices: [], _zone: zone.name
-    });
+    }, noCache);
 
   } catch (e) {
     return Response.json({ ok: false, error: e.message }, { status: 500 });
