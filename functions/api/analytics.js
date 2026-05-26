@@ -64,7 +64,7 @@ export async function onRequestGet(context) {
 
       // Dnes po hodinách — httpRequests1hGroups
       gql(token, `{viewer{zones(filter:{${zf}}){
-        httpRequests1hGroups(limit:24 filter:{date_geq:"${today}",date_leq:"${today}"} orderBy:[datetimeHour_ASC]){
+        httpRequests1hGroups(limit:24 filter:{date_geq:"${today}",date_leq:"${today}"}){
           dimensions{datetimeHour}
           sum{pageViews}
         }
