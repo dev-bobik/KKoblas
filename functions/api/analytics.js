@@ -10,10 +10,13 @@ async function gql(token, accountId, body) {
     headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
     body: JSON.stringify({ query: body })
   });
-  if (!r.ok) throw new Error('HTTP ' + r.status);
+  if (!r.ok) throw new Error('HTTP ' + r.status + ' – neplatný token nebo oprávnění');
   const j = await r.json();
   if (j.errors && j.errors.length) throw new Error(j.errors[0].message);
-  return (j.data && j.data.viewer && j.data.viewer.accounts && j.data.viewer.accounts[0]) || {};
+  const accounts = j.data && j.data.viewer && j.data.viewer.accounts;
+  // Vrátí { _accountFound: false } pokud CF_ACCOUNT_ID nesedí s tokenem
+  if (!accounts || accounts.length === 0) return { _accountFound: false };
+  return Object.assign({ _accountFound: true }, accounts[0]);
 }
 
 export async function onRequestGet(context) {
@@ -21,7 +24,10 @@ export async function onRequestGet(context) {
   const token     = context.env.CF_API_TOKEN;
 
   if (!accountId || !token) {
-    return Response.json({ ok: false, error: 'Chybí env vars CF_ACCOUNT_ID nebo CF_API_TOKEN' }, { status: 503 });
+    return Response.json({
+      ok: false,
+      error: 'Chybí env vars CF_ACCOUNT_ID nebo CF_API_TOKEN – nastav je v Cloudflare Pages → Settings → Environment variables'
+    }, { status: 503 });
   }
 
   const now    = new Date();
@@ -38,6 +44,14 @@ export async function onRequestGet(context) {
       gql(token, accountId, `{viewer{accounts(filter:{accountTag:"${accountId}"}){rumPageloadEventsAdaptiveGroups(filter:{${f7}} limit:50){count avg{sampleInterval}dimensions{requestPath}}}}}`),
       gql(token, accountId, `{viewer{accounts(filter:{accountTag:"${accountId}"}){rumPageloadEventsAdaptiveGroups(filter:{${f7}} limit:10){count avg{sampleInterval}dimensions{deviceType}}}}}`)
     ]);
+
+    // Kontrola jestli byl nalezen účet – nejčastější příčina nulových dat
+    if (!r7d._accountFound) {
+      return Response.json({
+        ok: false,
+        error: 'CF_ACCOUNT_ID nesedí s tímto API tokenem – zkontroluj Account ID v Cloudflare dashboard (pravý horní roh → URL obsahuje /accounts/TOTO_JE_ID)'
+      }, { status: 403 });
+    }
 
     // 7 dní
     const byDate = {}; let total = 0;
@@ -78,7 +92,12 @@ export async function onRequestGet(context) {
     const devTotal = Object.values(devMap).reduce((a, b) => a + b, 0) || 1;
     const devices = Object.entries(devMap).sort((a, b) => b[1] - a[1]).map(e => ({ type: e[0], count: e[1], pct: Math.round(e[1] / devTotal * 100) }));
 
-    return Response.json({ ok: true, pageviews: total, todayPv, days, hours, topPages, devices });
+    // Varování když jsou data nulová ale účet byl nalezen
+    const warning = (total === 0 && topPages.length === 0)
+      ? 'Účet nalezen, ale žádná data. Zkontroluj: 1) Web Analytics je aktivní pro tento web v CF dashboardu, 2) token má scope "Account Analytics: Read"'
+      : null;
+
+    return Response.json({ ok: true, pageviews: total, todayPv, days, hours, topPages, devices, warning });
 
   } catch (e) {
     return Response.json({ ok: false, error: e.message }, { status: 500 });

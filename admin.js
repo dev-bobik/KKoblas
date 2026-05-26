@@ -168,18 +168,36 @@ async function loadAnalytics() {
   var body = document.getElementById('anBody');
   if (!body) return;
   body.innerHTML = '<span class="an-loading">Načítám...</span>';
+  var btn = document.getElementById('anRefresh');
+  if (btn) { btn.disabled = true; btn.textContent = '↻ ...'; }
   try {
     var r = await fetch('/api/analytics');
     var d = await r.json();
     if (!d.ok) {
-      body.innerHTML = '<span class="an-err">' + (d.error || 'Neznámá chyba') + '</span>';
+      body.innerHTML = '<div class="an-err-box">'
+        + '<span class="an-err-icon">⚠</span>'
+        + '<span class="an-err-msg">' + (d.error || 'Neznámá chyba') + '</span>'
+        + '</div>';
       return;
     }
     body.innerHTML = buildAnHTML(d);
+    if (d.warning) {
+      body.innerHTML += '<div class="an-warn-box">'
+        + '<span class="an-err-icon">ℹ</span>'
+        + '<span class="an-err-msg">' + d.warning + '</span>'
+        + '</div>';
+    }
   } catch (e) {
-    body.innerHTML = '<span class="an-err">Chyba: ' + e.message + '</span>';
+    body.innerHTML = '<div class="an-err-box">'
+      + '<span class="an-err-icon">⚠</span>'
+      + '<span class="an-err-msg">Chyba: ' + e.message + ' — analytics funguje jen na živém webu (Cloudflare Pages)</span>'
+      + '</div>';
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '↻ OBNOVIT'; }
   }
 }
+
+document.getElementById('anRefresh').addEventListener('click', loadAnalytics);
 
 function buildAnHTML(d) {
   function bars(data, lblFn) {
