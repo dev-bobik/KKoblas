@@ -1084,6 +1084,23 @@ a { text-decoration: none; }
   .hero__visual { width: 100%; }
   .hero__photo img { aspect-ratio: 1 / 1; }
 
+  /* Zabránit přetékání kurzívního textu mimo obrazovku */
+  .hero__title em { white-space: normal; }
+
+  /* Lead text nechť zabírá celou šířku */
+  .hero__lead { max-width: 100%; }
+
+  /* Zmenšit přílišné odsazení about sekce */
+  .about { padding: 64px 20px 48px; }
+
+  /* Stats bar – 2×2 mřížka na menších telefonech */
+  .stats-bar__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 8px;
+    justify-items: center;
+  }
+
   .who__grid { grid-template-columns: 1fr; }
   .how__grid  { grid-template-columns: repeat(2, 1fr); }
 
@@ -1109,9 +1126,27 @@ a { text-decoration: none; }
 }
 
 @media (max-width: 480px) {
-  .hero__actions { flex-direction: column; }
-  .hero__actions .btn { text-align: center; }
-  .stats-bar__inner { gap: 24px; flex-wrap: wrap; }
+  .hero__inner { padding: 28px 16px 44px; }
+  .hero__actions { flex-direction: column; padding-left: 0; }
+  .hero__actions .btn { text-align: center; width: 100%; }
+  .hero__lead { padding-left: 0; padding-right: 0; }
+  .stats-bar__inner { gap: 20px 8px; }
+
+  /* How grid – 1 sloupec na malých telefonech */
+  .how__grid { grid-template-columns: 1fr; }
+
+  /* Who a How sekce – menší odsazení */
+  .who { padding: 36px 16px 30px; }
+  .how { padding: 30px 16px 40px; }
+
+  /* Zastavit float animace – výkon + zabraňuje přetékání */
+  .float-card { animation: none; transform: none !important; }
+
+  /* Footer email – zalamovat dlouhé adresy */
+  .footer__contact-link {
+    word-break: break-all;
+    font-size: .82rem;
+  }
 
   .about__gallery {
     grid-template-columns: 1fr;
