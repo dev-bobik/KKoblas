@@ -108,3 +108,29 @@ function initOrder(serviceMap) {
     .then(function (status) { initOrder(buildServiceMap(status.prices)); })
     .catch(function () { initOrder(buildServiceMap(null)); });
 })();
+
+// ── Modals ────────────────────────────────────────
+(function () {
+  document.querySelectorAll('[data-modal]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      var modal = document.getElementById(link.dataset.modal);
+      if (modal) modal.hidden = false;
+    });
+  });
+
+  document.querySelectorAll('.modal-overlay').forEach(function (overlay) {
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) overlay.hidden = true;
+    });
+    overlay.querySelector('.modal__close').addEventListener('click', function () {
+      overlay.hidden = true;
+    });
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay').forEach(function (o) { o.hidden = true; });
+    }
+  });
+})();
