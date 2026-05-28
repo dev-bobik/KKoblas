@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://koblas-nutricni.cz/sitemap.xml
