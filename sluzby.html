@@ -358,9 +358,9 @@
           set('inbody-mentoring', 'bez InBody: ' + fmtKc(meJed + ME_INBODY) + ' (−' + fmtKc(ME_INBODY) + ')');
           set('inbody-ultimate',  'bez InBody: ' + fmtKc(ulJed + UL_INBODY) + ' (−' + fmtKc(UL_INBODY) + ')');
 
-          // Splátky texty
-          set('note-mentoring', 'Nebo splátky: ' + fmtKc(meSpl) + ' (v 1. měs. po slevě jen ' + fmtKc(meSpl - ME_INBODY) + ') + 3× 2 800 Kč.');
-          set('note-ultimate',  'Nebo splátky: ' + fmtKc(ulSpl) + ' (po slevě na InBody jen ' + fmtKc(ulSpl - UL_INBODY) + ') + 5× 2 400 Kč.');
+          // Splátky texty – vlastní text z adminu nebo auto-výpočet
+          set('note-mentoring', me.splatkyNote || ('Nebo splátky: ' + fmtKc(meSpl) + ' (v 1. měs. po slevě jen ' + fmtKc(meSpl - ME_INBODY) + ') + 3× 2 800 Kč.'));
+          set('note-ultimate',  ul.splatkyNote || ('Nebo splátky: ' + fmtKc(ulSpl) + ' (po slevě na InBody jen ' + fmtKc(ulSpl - UL_INBODY) + ') + 5× 2 400 Kč.'));
 
           // Tlačítka
           set('btn-startup-order',  'Objednat za ' + suJed);
