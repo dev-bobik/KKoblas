@@ -25,6 +25,7 @@ function unlock() {
   lockScreen.style.display = 'none';
   consolEl.hidden = false;
   sessionStorage.setItem(SESSION_KEY, '1');
+  ENTERED_PASS = sessionStorage.getItem(SESSION_KEY + '_pass') || ENTERED_PASS;
   loadStatus();
   loadAnalytics();
 }
@@ -45,6 +46,7 @@ lockForm.addEventListener('submit', async function (e) {
     var data = await postRes.json();
     if (postRes.ok && data.ok) {
       ENTERED_PASS = typed;
+      sessionStorage.setItem(SESSION_KEY + '_pass', typed);
       currentStatus = data.status;
       unlock();
     } else {
