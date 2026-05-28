@@ -4,12 +4,12 @@ var DEFAULT_PRICES = {
   ultimate:  { jednorizove: '22 300 Kč', splatky: '11 900 Kč (1. splátka)' }
 };
 
-function buildServiceMap(prices) {
+function buildServiceMap(prices, event) {
   var p = prices || {};
   var su = p.startup   || DEFAULT_PRICES.startup;
   var me = p.mentoring || DEFAULT_PRICES.mentoring;
   var ul = p.ultimate  || DEFAULT_PRICES.ultimate;
-  return {
+  var map = {
     startup: {
       label: 'START-UP – Profi odrazový můstek',
       jednorizove: { platba: 'Jednorázová platba', price: su.jednorizove || DEFAULT_PRICES.startup.jednorizove },
@@ -26,6 +26,13 @@ function buildServiceMap(prices) {
       splatky:     { platba: 'Splátkový kalendář', price: ul.splatky     || DEFAULT_PRICES.ultimate.splatky }
     }
   };
+  if (event && event.active && event.name) {
+    map.event = {
+      label: event.name,
+      jednorizove: { platba: 'Jednorázová platba', price: event.cena || '—' }
+    };
+  }
+  return map;
 }
 
 function initOrder(serviceMap) {
@@ -105,8 +112,8 @@ function initOrder(serviceMap) {
 (function () {
   fetch('/api/status', { cache: 'no-store' })
     .then(function (r) { return r.json(); })
-    .then(function (status) { initOrder(buildServiceMap(status.prices)); })
-    .catch(function () { initOrder(buildServiceMap(null)); });
+    .then(function (status) { initOrder(buildServiceMap(status.prices, status.event)); })
+    .catch(function () { initOrder(buildServiceMap(null, null)); });
 })();
 
 // ── Modals ────────────────────────────────────────

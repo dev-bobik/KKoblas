@@ -16,21 +16,18 @@
     if (!banner) return;
     if (!ev || !ev.active) { banner.hidden = true; return; }
     banner.hidden = false;
-    var nameEl    = document.getElementById('eventBannerName');
-    var opisEl    = document.getElementById('eventBannerPopis');
-    var cenaEl    = document.getElementById('eventBannerCena');
-    var fakturaEl = document.getElementById('eventBannerFaktura');
-    var odkazEl   = document.getElementById('eventBannerOdkaz');
-    if (nameEl)  nameEl.textContent  = ev.name  || '';
-    if (opisEl)  opisEl.textContent  = ev.popis || '';
+    var nameEl      = document.getElementById('eventBannerName');
+    var opisEl      = document.getElementById('eventBannerPopis');
+    var cenaEl      = document.getElementById('eventBannerCena');
+    var objednatEl  = document.getElementById('eventBannerObjednat');
+    var odkazEl     = document.getElementById('eventBannerOdkaz');
+    if (nameEl)     nameEl.textContent = ev.name  || '';
+    if (opisEl)     opisEl.textContent = ev.popis || '';
     if (cenaEl) {
       if (ev.cena) { cenaEl.textContent = ev.cena; cenaEl.hidden = false; }
       else { cenaEl.hidden = true; }
     }
-    if (fakturaEl) {
-      if (ev.faktura) { fakturaEl.href = ev.faktura; fakturaEl.hidden = false; }
-      else { fakturaEl.hidden = true; }
-    }
+    if (objednatEl) objednatEl.hidden = false;
     if (odkazEl) {
       if (ev.odkaz) { odkazEl.href = ev.odkaz; odkazEl.hidden = false; }
       else { odkazEl.hidden = true; }
