@@ -1,0 +1,84 @@
+/* ── VOP Hero ─────────────────────────────── */
+.vop-hero {
+  padding: 7rem 1.5rem 3rem;
+  text-align: center;
+  background: var(--color-bg, #0d1a0f);
+}
+
+.vop-hero__inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.vop-hero__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: var(--color-text, #e8e0d0);
+  margin-top: 0.75rem;
+  line-height: 1.2;
+}
+
+/* ── VOP Section ──────────────────────────── */
+.vop-section {
+  padding: 2rem 1.5rem 5rem;
+  background: var(--color-bg, #0d1a0f);
+}
+
+.vop-section__inner {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* ── VOP Block ────────────────────────────── */
+.vop-block {
+  border-left: 2px solid var(--color-gold, #b8972a);
+  padding-left: 1.5rem;
+}
+
+.vop-block__title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: var(--color-gold, #b8972a);
+  margin-bottom: 1rem;
+}
+
+.vop-block p {
+  color: var(--color-text-muted, #a89880);
+  line-height: 1.75;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.vop-block p strong {
+  color: var(--color-text, #e8e0d0);
+}
+
+.vop-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.vop-list li {
+  color: var(--color-text-muted, #a89880);
+  font-size: 0.95rem;
+}
+
+.vop-list li strong {
+  color: var(--color-text, #e8e0d0);
+}
+
+.vop-link {
+  color: var(--color-gold, #b8972a);
+  text-decoration: none;
+}
+
+.vop-link:hover {
+  text-decoration: underline;
+}
