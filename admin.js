@@ -78,12 +78,17 @@ async function loadStatus() {
 }
 
 async function saveStatus() {
+  var pass = ENTERED_PASS || sessionStorage.getItem(SESSION_KEY + '_pass') || '';
+  if (!pass) {
+    pass = prompt('Zadej heslo pro uložení:') || '';
+    if (pass) { ENTERED_PASS = pass; sessionStorage.setItem(SESSION_KEY + '_pass', pass); }
+  }
   setDeploy('⚡ Ukládám...', 'loading');
   try {
     var res = await fetch('/api/status', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(Object.assign({ password: ENTERED_PASS }, currentStatus))
+      body: JSON.stringify(Object.assign({ password: pass }, currentStatus))
     });
     if (!res.ok) throw new Error(res.status);
     setDeploy('✓ Uloženo — změna je okamžitě živá', 'ok');
