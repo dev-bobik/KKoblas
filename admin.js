@@ -146,12 +146,16 @@ function renderEvent() {
   if (txt)   txt.textContent = isActive ? 'AKTIVNÍ' : 'NEAKTIVNÍ';
   if (lbl)   lbl.textContent = isActive ? 'DEAKTIVOVAT' : 'AKTIVOVAT';
   if (panel) panel.classList.toggle('event-panel--active', isActive);
-  var nameEl  = document.getElementById('eventName');
-  var opisEl  = document.getElementById('eventPopis');
-  var odkazEl = document.getElementById('eventOdkaz');
-  if (nameEl)  nameEl.value  = ev.name  || '';
-  if (opisEl)  opisEl.value  = ev.popis || '';
-  if (odkazEl) odkazEl.value = ev.odkaz || '';
+  var nameEl    = document.getElementById('eventName');
+  var opisEl    = document.getElementById('eventPopis');
+  var cenaEl    = document.getElementById('eventCena');
+  var fakturaEl = document.getElementById('eventFaktura');
+  var odkazEl   = document.getElementById('eventOdkaz');
+  if (nameEl)    nameEl.value    = ev.name    || '';
+  if (opisEl)    opisEl.value    = ev.popis   || '';
+  if (cenaEl)    cenaEl.value    = ev.cena    || '';
+  if (fakturaEl) fakturaEl.value = ev.faktura || '';
+  if (odkazEl)   odkazEl.value   = ev.odkaz   || '';
 }
 
 // ── Toggle ───────────────────────────────────────
@@ -290,10 +294,12 @@ document.getElementById('priceSave').addEventListener('click', async function ()
 // ── Event save ───────────────────────────────────
 document.getElementById('eventSave').addEventListener('click', async function () {
   currentStatus.event = {
-    active: (currentStatus.event || {}).active === true,
-    name:   document.getElementById('eventName').value.trim(),
-    popis:  document.getElementById('eventPopis').value.trim(),
-    odkaz:  document.getElementById('eventOdkaz').value.trim()
+    active:  (currentStatus.event || {}).active === true,
+    name:    document.getElementById('eventName').value.trim(),
+    popis:   document.getElementById('eventPopis').value.trim(),
+    cena:    document.getElementById('eventCena').value.trim(),
+    faktura: document.getElementById('eventFaktura').value.trim(),
+    odkaz:   document.getElementById('eventOdkaz').value.trim()
   };
   await saveStatus();
 });

@@ -127,7 +127,22 @@
   max-width: 56ch;
 }
 
-.event-banner__btn { margin-top: 8px; }
+.event-banner__price {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent, #fff);
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+.event-banner__btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.event-banner__btn { margin-top: 0; }
 
 /* ── Packages section ───────────────────────────── */
 .packages {
