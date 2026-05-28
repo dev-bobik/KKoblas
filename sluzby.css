@@ -130,7 +130,7 @@
 .event-banner__price {
   font-size: 1.4rem;
   font-weight: 700;
-  color: var(--accent, #fff);
+  color: var(--gold);
   margin-top: 12px;
   margin-bottom: 0;
 }
