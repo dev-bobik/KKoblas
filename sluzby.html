@@ -146,8 +146,8 @@
               <span class="pkg-card__duration">4 měsíce</span>
               <div class="pkg-card__pricing">
                 <span class="pkg-card__price" id="price-mentoring">14 700 Kč</span>
-                <span class="pkg-card__price-inbody">bez InBody: 15 900 Kč (−1 200 Kč)</span>
-                <span class="pkg-card__price-note">Nebo splátky: 7 500 Kč (v 1. měs. po slevě jen 6 200 Kč) + 3× 2 800 Kč.</span>
+                <span class="pkg-card__price-inbody" id="inbody-mentoring">bez InBody: 15 900 Kč (−1 200 Kč)</span>
+                <span class="pkg-card__price-note" id="note-mentoring">Nebo splátky: 7 500 Kč (v 1. měs. po slevě jen 6 200 Kč) + 3× 2 800 Kč.</span>
               </div>
             </div>
             <div class="pkg-btns pkg-btns--normal">
@@ -200,8 +200,8 @@
               <span class="pkg-card__duration">6 měsíců</span>
               <div class="pkg-card__pricing">
                 <span class="pkg-card__price" id="price-ultimate">22 300 Kč</span>
-                <span class="pkg-card__price-inbody">bez InBody: 23 900 Kč (−1 600 Kč)</span>
-                <span class="pkg-card__price-note">Nebo splátky: 11 900 Kč (po slevě na InBody jen 10 300 Kč) + 5× 2 400 Kč.</span>
+                <span class="pkg-card__price-inbody" id="inbody-ultimate">bez InBody: 23 900 Kč (−1 600 Kč)</span>
+                <span class="pkg-card__price-note" id="note-ultimate">Nebo splátky: 11 900 Kč (po slevě na InBody jen 10 300 Kč) + 5× 2 400 Kč.</span>
               </div>
             </div>
             <div class="pkg-btns pkg-btns--normal">
@@ -320,6 +320,16 @@
   <script src="sluzby.js"></script>
   <script>
     (function () {
+      function parseKc(str) {
+        // Vrátí číslo: "11 900 Kč (1. splátka)" → 11900
+        return parseInt((str || '').replace(/\s/g, '').replace(/Kč.*$/, '')) || 0;
+      }
+      function fmtKc(n) {
+        // 11900 → "11 900 Kč"
+        return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' Kč';
+      }
+      function set(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; }
+
       fetch('/api/status', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
         .then(function (s) {
@@ -327,15 +337,37 @@
           var su = p.startup   || {};
           var me = p.mentoring || {};
           var ul = p.ultimate  || {};
-          function set(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; }
-          set('price-startup',  su.jednorizove || '6 900 Kč');
-          set('price-mentoring', me.jednorizove || '14 700 Kč');
-          set('price-ultimate',  ul.jednorizove || '22 300 Kč');
-          set('btn-startup-order',  'Objednat za ' + (su.jednorizove || '6 900 Kč'));
-          set('btn-mentoring-jed',  'Koupit jednorázově za ' + (me.jednorizove || '14 700 Kč'));
-          set('btn-mentoring-spl',  'Chci na splátky – 1. platba ' + (me.splatky || '7 500 Kč (1. splátka)').split(' ')[0] + ' Kč');
-          set('btn-ultimate-jed',   'Koupit jednorázově za ' + (ul.jednorizove || '22 300 Kč'));
-          set('btn-ultimate-spl',   'Chci na splátky – 1. platba ' + (ul.splatky || '11 900 Kč (1. splátka)').split(' ')[0] + ' Kč');
+
+          // Fixní InBody slevy
+          var ME_INBODY = 1200;
+          var UL_INBODY = 1600;
+
+          // Ceny
+          var suJed = su.jednorizove || '6 900 Kč';
+          var meJed = parseKc(me.jednorizove) || 14700;
+          var meSpl = parseKc(me.splatky)     || 7500;
+          var ulJed = parseKc(ul.jednorizove) || 22300;
+          var ulSpl = parseKc(ul.splatky)     || 11900;
+
+          // Základní ceny
+          set('price-startup',   suJed);
+          set('price-mentoring', fmtKc(meJed));
+          set('price-ultimate',  fmtKc(ulJed));
+
+          // InBody texty – bez InBody = cena + sleva
+          set('inbody-mentoring', 'bez InBody: ' + fmtKc(meJed + ME_INBODY) + ' (−' + fmtKc(ME_INBODY) + ')');
+          set('inbody-ultimate',  'bez InBody: ' + fmtKc(ulJed + UL_INBODY) + ' (−' + fmtKc(UL_INBODY) + ')');
+
+          // Splátky texty
+          set('note-mentoring', 'Nebo splátky: ' + fmtKc(meSpl) + ' (v 1. měs. po slevě jen ' + fmtKc(meSpl - ME_INBODY) + ') + 3× 2 800 Kč.');
+          set('note-ultimate',  'Nebo splátky: ' + fmtKc(ulSpl) + ' (po slevě na InBody jen ' + fmtKc(ulSpl - UL_INBODY) + ') + 5× 2 400 Kč.');
+
+          // Tlačítka
+          set('btn-startup-order',  'Objednat za ' + suJed);
+          set('btn-mentoring-jed',  'Koupit jednorázově za ' + fmtKc(meJed));
+          set('btn-mentoring-spl',  'Chci na splátky – 1. platba ' + fmtKc(meSpl));
+          set('btn-ultimate-jed',   'Koupit jednorázově za ' + fmtKc(ulJed));
+          set('btn-ultimate-spl',   'Chci na splátky – 1. platba ' + fmtKc(ulSpl));
         })
         .catch(function () {});
     })();
