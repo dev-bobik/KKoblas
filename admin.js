@@ -79,10 +79,6 @@ async function loadStatus() {
 
 async function saveStatus() {
   var pass = ENTERED_PASS || sessionStorage.getItem(SESSION_KEY + '_pass') || '';
-  if (!pass) {
-    pass = prompt('Zadej heslo pro uložení:') || '';
-    if (pass) { ENTERED_PASS = pass; sessionStorage.setItem(SESSION_KEY + '_pass', pass); }
-  }
   setDeploy('⚡ Ukládám...', 'loading');
   try {
     var res = await fetch('/api/status', {
