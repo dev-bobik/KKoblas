@@ -506,9 +506,9 @@
 .food-slider__item.is-prev    { transform: translateX(calc(-100% - 112px)); z-index: 1; }
 .food-slider__item.is-exiting { transform: translateX(calc(-200% - 224px)); z-index: 0; }
 
-.food-slider .fs--1 { background-image: url('jidlo.webp'); }
+.food-slider .fs--1 { background-image: url("fotky pro záložku služby-20260510T210935Z-3-001/fotky pro záložku služby/pridat1.webp"); }
 .food-slider .fs--2 { background-image: url("fotky pro záložku služby-20260510T210935Z-3-001/fotky pro záložku služby/P_20260327_143342.webp"); }
-.food-slider .fs--3 { background-image: url('jidlo1.webp'); }
+.food-slider .fs--3 { background-image: url("fotky pro záložku služby-20260510T210935Z-3-001/fotky pro záložku služby/pridat2.webp"); }
 .food-slider .fs--4 { background-image: url("fotky pro záložku služby-20260510T210935Z-3-001/fotky pro záložku služby/P_20260327_200004.webp"); }
 
 /* ── Info blocks ────────────────────────────────── */
