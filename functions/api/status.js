@@ -43,24 +43,16 @@ export async function onRequestPost(context) {
         odkaz:  (body.event?.odkaz || '').slice(0, 300)
       },
       prices: {
-        startup: {
-          jednorizove: String(body.prices?.startup?.jednorizove || DEF_P.startup.jednorizove).slice(0, 80),
-          inbodyNote:  String(body.prices?.startup?.inbodyNote  || '').slice(0, 200),
-          splatkyLink: String(body.prices?.startup?.splatkyLink || '').slice(0, 200)
-        },
+        startup:  { jednorizove: String(body.prices?.startup?.jednorizove  || DEF_P.startup.jednorizove).slice(0, 80) },
         mentoring: {
           jednorizove: String(body.prices?.mentoring?.jednorizove || DEF_P.mentoring.jednorizove).slice(0, 80),
           splatky:     String(body.prices?.mentoring?.splatky     || DEF_P.mentoring.splatky).slice(0, 120),
-          splatkyNote: String(body.prices?.mentoring?.splatkyNote || '').slice(0, 300),
-          inbodyNote:  String(body.prices?.mentoring?.inbodyNote  || '').slice(0, 200),
-          splatkyLink: String(body.prices?.mentoring?.splatkyLink || '').slice(0, 200)
+          splatkyNote: String(body.prices?.mentoring?.splatkyNote || '').slice(0, 300)
         },
         ultimate: {
-          jednorizove: String(body.prices?.ultimate?.jednorizove || DEF_P.ultimate.jednorizove).slice(0, 80),
-          splatky:     String(body.prices?.ultimate?.splatky     || DEF_P.ultimate.splatky).slice(0, 120),
-          splatkyNote: String(body.prices?.ultimate?.splatkyNote || '').slice(0, 300),
-          inbodyNote:  String(body.prices?.ultimate?.inbodyNote  || '').slice(0, 200),
-          splatkyLink: String(body.prices?.ultimate?.splatkyLink || '').slice(0, 200)
+          jednorizove: String(body.prices?.ultimate?.jednorizove  || DEF_P.ultimate.jednorizove).slice(0, 80),
+          splatky:     String(body.prices?.ultimate?.splatky      || DEF_P.ultimate.splatky).slice(0, 120),
+          splatkyNote: String(body.prices?.ultimate?.splatkyNote  || '').slice(0, 300)
         }
       }
     };

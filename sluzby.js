@@ -1,13 +1,6 @@
 (function () {
   var SERVICES = ['startup', 'mentoring', 'ultimate'];
 
-  function setNote(id, text) {
-    var el = document.getElementById(id);
-    if (!el) return;
-    if (text) { el.textContent = text; el.hidden = false; }
-    else { el.hidden = true; }
-  }
-
   function applyStatuses(data) {
     SERVICES.forEach(function (sluzba) {
       var status = (data && data[sluzba]) || 'volny';
@@ -16,16 +9,6 @@
       card.classList.toggle('plno', status === 'uzavreny');
     });
     applyEvent(data && data.event);
-    var p = (data && data.prices) || {};
-    var su = p.startup   || {};
-    var me = p.mentoring || {};
-    var ul = p.ultimate  || {};
-    setNote('inbody-note-startup',   su.inbodyNote);
-    setNote('splatky-link-startup',  su.splatkyLink);
-    setNote('inbody-note-mentoring', me.inbodyNote);
-    setNote('splatky-link-mentoring',me.splatkyLink);
-    setNote('inbody-note-ultimate',  ul.inbodyNote);
-    setNote('splatky-link-ultimate', ul.splatkyLink);
   }
 
   function applyEvent(ev) {
