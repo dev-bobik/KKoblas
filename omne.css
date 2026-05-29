@@ -35,6 +35,8 @@
   transition: transform .5s ease;
 }
 
+.om-photos__bottom img { object-position: center center; }
+
 .om-photos__top:hover img,
 .om-photos__bottom:hover img {
   transform: scale(1.04);
