@@ -1,6 +1,6 @@
 const DEFAULT = {
   startup: 'volny', mentoring: 'volny', ultimate: 'volny',
-  event: { active: false, name: '', popis: '', odkaz: '' },
+  event: { active: false, name: '', popis: '', cena: '', odkaz: '' },
   prices: {
     startup:  { jednorizove: '6 900 Kč' },
     mentoring: { jednorizove: '14 700 Kč', splatky: '7 500 Kč (1. splátka)' },
@@ -39,6 +39,7 @@ export async function onRequestPost(context) {
         active: body.event?.active === true,
         name:   (body.event?.name  || '').slice(0, 120),
         popis:  (body.event?.popis || '').slice(0, 500),
+        cena:   (body.event?.cena  || '').slice(0, 80),
         odkaz:  (body.event?.odkaz || '').slice(0, 300)
       },
       prices: {
