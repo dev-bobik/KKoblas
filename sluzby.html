@@ -101,6 +101,7 @@
               <span class="pkg-card__duration">1 měsíc</span>
               <div class="pkg-card__pricing">
                 <span class="pkg-card__price" id="price-startup">6 900 Kč</span>
+                <span class="pkg-card__price-inbody" id="inbody-startup">bez InBody: 7 700 Kč (−800 Kč)</span>
                 <span class="pkg-card__price-note"><a href="#inbody" class="pkg-anchor">více info zde</a></span>
               </div>
             </div>
@@ -346,22 +347,24 @@
           var ul = p.ultimate  || {};
 
           // Fixní InBody slevy
+          var SU_INBODY = 800;
           var ME_INBODY = 1200;
           var UL_INBODY = 1600;
 
           // Ceny
-          var suJed = su.jednorizove || '6 900 Kč';
+          var suJed = parseKc(su.jednorizove) || 6900;
           var meJed = parseKc(me.jednorizove) || 14700;
           var meSpl = parseKc(me.splatky)     || 7500;
           var ulJed = parseKc(ul.jednorizove) || 22300;
           var ulSpl = parseKc(ul.splatky)     || 11900;
 
           // Základní ceny
-          set('price-startup',   suJed);
+          set('price-startup',   fmtKc(suJed));
           set('price-mentoring', fmtKc(meJed));
           set('price-ultimate',  fmtKc(ulJed));
 
           // InBody texty – bez InBody = cena + sleva
+          set('inbody-startup',   'bez InBody: ' + fmtKc(suJed + SU_INBODY) + ' (−' + fmtKc(SU_INBODY) + ')');
           set('inbody-mentoring', 'bez InBody: ' + fmtKc(meJed + ME_INBODY) + ' (−' + fmtKc(ME_INBODY) + ')');
           set('inbody-ultimate',  'bez InBody: ' + fmtKc(ulJed + UL_INBODY) + ' (−' + fmtKc(UL_INBODY) + ')');
 
@@ -370,7 +373,7 @@
           set('note-ultimate',  ul.splatkyNote || ('Nebo splátky: ' + fmtKc(ulSpl) + ' (po slevě na InBody jen ' + fmtKc(ulSpl - UL_INBODY) + ') + 5× 2 400 Kč.'));
 
           // Tlačítka
-          set('btn-startup-order',  'Objednat za ' + suJed);
+          set('btn-startup-order',  'Objednat za ' + fmtKc(suJed));
           set('btn-mentoring-jed',  'Koupit jednorázově za ' + fmtKc(meJed));
           set('btn-mentoring-spl',  'Chci na splátky – 1. platba ' + fmtKc(meSpl));
           set('btn-ultimate-jed',   'Koupit jednorázově za ' + fmtKc(ulJed));
