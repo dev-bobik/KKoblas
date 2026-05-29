@@ -1,10 +1,7 @@
-var WEB3FORMS_KEY = '962ce707-a0c7-4153-890d-415b6051d67a';
-
 (function () {
   var form      = document.getElementById('cekackaForm');
   var submitBtn = document.getElementById('ckSubmitBtn');
   var errorEl   = document.getElementById('ckError');
-  var successEl = document.getElementById('ckSuccess');
 
   if (!form) return;
 
@@ -21,21 +18,30 @@ var WEB3FORMS_KEY = '962ce707-a0c7-4153-890d-415b6051d67a';
     if (errorEl) errorEl.hidden = true;
 
     try {
-      var data = new FormData(form);
-      data.append('access_key', WEB3FORMS_KEY);
-      var res  = await fetch('https://api.web3forms.com/submit', {
+      var zajem = Array.from(form.querySelectorAll('[name="Zajem"]:checked'))
+                       .map(function (el) { return el.value; });
+
+      var payload = {
+        Jmeno:   form.querySelector('[name="Jmeno"]').value.trim(),
+        Email:   form.querySelector('[name="Email"]').value.trim(),
+        Telefon: form.querySelector('[name="Telefon"]').value.trim(),
+        Zajem:   zajem
+      };
+
+      var res = await fetch('/api/cekacka', {
         method: 'POST',
-        body: data,
-        headers: { Accept: 'application/json' }
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload)
       });
 
-      if (res.ok) {
+      var result = await res.json();
+      if (res.ok && result.ok) {
         window.location.href = 'index.html';
       } else {
-        throw new Error('server error ' + res.status);
+        throw new Error(result.error || 'Server error ' + res.status);
       }
     } catch (err) {
-      console.error('Web3Forms error:', err);
+      console.error('Cekacka error:', err);
       submitBtn.disabled = false;
       submitBtn.textContent = 'Chci vědět o volném místě';
       if (errorEl) errorEl.hidden = false;
