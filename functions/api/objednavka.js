@@ -47,6 +47,8 @@ export async function onRequestPost(context) {
         ${body.Obvod_boku_cm ? `<tr><td style="padding:8px 16px;border-bottom:1px solid #eee;color:#666">Obvod boků</td><td style="padding:8px 16px;border-bottom:1px solid #eee">${body.Obvod_boku_cm} cm</td></tr>` : ''}
         ${body.Obvod_pasu_cm ? `<tr><td style="padding:8px 16px;border-bottom:1px solid #eee;color:#666">Obvod pasu</td><td style="padding:8px 16px;border-bottom:1px solid #eee">${body.Obvod_pasu_cm} cm</td></tr>` : ''}
         ${body.Motivace ? `<tr><td style="padding:8px 16px;border-bottom:1px solid #eee;color:#666">Motivace</td><td style="padding:8px 16px;border-bottom:1px solid #eee">${body.Motivace}</td></tr>` : ''}
+        <tr><td colspan="2" style="background:#1a1a1a;color:#fff;padding:12px 16px;font-weight:bold">Souhlasy</td></tr>
+        <tr><td style="padding:8px 16px;color:#666">Anonymní použití výsledků</td><td style="padding:8px 16px">${body.Souhlas_anonymni === 'ano' ? '✅ Ano' : '❌ Ne'}</td></tr>
       </table>
     `;
 
