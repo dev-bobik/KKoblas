@@ -67,7 +67,7 @@ export async function onRequestPost(context) {
             <p style="margin:0;font-size:18px;font-weight:bold">${body.Sluzba || '—'}</p>
             <p style="margin:4px 0 0;color:#666">${body.Platba || ''} — <strong>${body.Cena || ''}</strong></p>
           </div>
-          <p>Pokud máš jakýkoli dotaz, odpověz na tento email nebo mi napiš přímo na <a href="mailto:${OWNER_EMAIL}" style="color:#1a1a1a">${OWNER_EMAIL}</a>.</p>
+          <p>Pokud máš jakýkoli dotaz, napiš mi na <a href="mailto:${OWNER_EMAIL}" style="color:#1a1a1a">${OWNER_EMAIL}</a>.</p>
           <p style="margin-bottom:0">Těším se na spolupráci,<br><strong>Kryštof Koblas</strong></p>
         </div>
         <div style="background:#f5f5f5;padding:16px;text-align:center">
